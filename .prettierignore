@@ -1,0 +1,7 @@
+node_modules
+dist
+package-lock.json
+apps/api/openapi.json
+apps/web/src/api/generated/
+apps/mobile/src/api/generated/
+.expo
