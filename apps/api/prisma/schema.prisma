@@ -1,0 +1,264 @@
+// Schema do banco (PostgreSQL / Neon).
+// Convenção: nomes em português; no banco tudo em snake_case (@@map / @map).
+// IDs: UUID gerado pelo próprio Postgres com gen_random_uuid() (nativo desde
+// o PG 13, sem extensão). Cada tabela usará:
+//   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── DB-001 · Fundação: enums ───────────────────────────────────────────────
+
+/// Papel do usuário no sistema.
+enum Papel {
+  profissional
+  aluno
+
+  @@map("papel")
+}
+
+/// Tipo de modelo do motor de questionários (um motor serve os três).
+enum TipoModelo {
+  anamnese
+  avaliacao
+  feedback
+
+  @@map("tipo_modelo")
+}
+
+/// Tipo de pergunta. "numero" e "escala" podem aparecer no gráfico de evolução.
+enum TipoPergunta {
+  texto
+  numero
+  escala
+  escolha_unica
+  multipla_escolha
+  data
+
+  @@map("tipo_pergunta")
+}
+
+/// Ciclo de vida de um envio de feedback.
+enum StatusFeedback {
+  agendado
+  enviado
+  respondido
+  atrasado
+
+  @@map("status_feedback")
+}
+
+/// Frequência de liberação de feedbacks recorrentes.
+enum Recorrencia {
+  semanal
+  quinzenal
+  mensal
+  avulso
+
+  @@map("recorrencia")
+}
+
+// ─── DB-002 · Identidade: usuários ──────────────────────────────────────────
+
+/// Conta de acesso (login). Uma tabela só para os dois papéis; os dados
+/// específicos de cada um ficam em profissionais (DB-003) e alunos (DB-004).
+model Usuario {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  papel     Papel
+  nome      String   @db.VarChar(120)
+  /// Único. A API salva sempre em minúsculas; o banco garante isso com um
+  /// CHECK (ver migration), então "Ana@x.com" e "ana@x.com" não duplicam.
+  email     String   @unique @db.VarChar(254)
+  /// Nunca a senha em texto: só o hash (ex.: argon2/bcrypt), gerado pela API.
+  senhaHash String   @map("senha_hash") @db.VarChar(255)
+  /// Desativar em vez de apagar: o histórico do usuário é preservado.
+  ativo     Boolean  @default(true)
+  criadoEm  DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+
+  /// Lado inverso do 1:1 com Profissional (DB-003). Não cria coluna aqui.
+  profissional Profissional?
+  /// Lado inverso do 1:1 com Aluno (DB-004). Não cria coluna aqui.
+  aluno        Aluno?
+  /// Lado inverso do 1:N com Sessao (DB-006). Não cria coluna aqui.
+  sessoes      Sessao[]
+
+  @@index([papel])
+  @@map("usuarios")
+}
+
+// ─── DB-003 · Identidade: profissionais ─────────────────────────────────────
+
+/// Dados do personal. 1:1 com Usuario (papel = profissional); o login, nome
+/// e e-mail ficam em usuarios.
+model Profissional {
+  id                   String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// Único: é o que garante o 1:1 com usuarios.
+  usuarioId            String  @unique @map("usuario_id") @db.Uuid
+  /// Opcional (ex.: CREF "123456-G/SP"). Sem registro = null, nunca "".
+  /// O banco barra texto vazio com um CHECK (ver migration).
+  registroProfissional String? @map("registro_profissional") @db.VarChar(30)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com Aluno (DB-004). Não cria coluna aqui.
+  alunos  Aluno[]
+  /// Lado inverso do 1:N com ModeloQuestionario (DB-007). Não cria coluna aqui.
+  modelos ModeloQuestionario[]
+
+  @@map("profissionais")
+}
+
+// ─── DB-004 · Identidade: alunos ────────────────────────────────────────────
+
+/// Sexo do aluno. Define qual modelo de anamnese (M/F) ele recebe.
+enum Sexo {
+  masculino
+  feminino
+
+  @@map("sexo")
+}
+
+/// Aluno de um profissional. Nasce pelo cadastro do personal (sem login);
+/// o vínculo com usuarios só aparece quando ele ativa a conta pelo convite.
+model Aluno {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// Nulo até o aluno ativar a conta. Único: um usuário é no máximo um aluno.
+  usuarioId      String?   @unique @map("usuario_id") @db.Uuid
+  /// Dono do aluno. Toda consulta filtra por aqui.
+  profissionalId String    @map("profissional_id") @db.Uuid
+  nome           String    @db.VarChar(120)
+  sexo           Sexo
+  /// Obrigatória: é por ela que o sistema sabe se o aluno é menor (LG-MEN-01).
+  /// A idade é calculada, nunca guardada.
+  dataNascimento DateTime  @map("data_nascimento") @db.Date
+  /// Contato (opcionais). E-mail em minúsculas; telefone só dígitos (DDD + número).
+  /// O banco garante os dois formatos com CHECK (ver migration).
+  email          String?   @db.VarChar(254)
+  telefone       String?   @db.VarChar(11)
+  /// Desativar em vez de apagar: o histórico do aluno é preservado.
+  ativo          Boolean   @default(true)
+  criadoEm       DateTime  @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm   DateTime  @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  usuario      Usuario?     @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+  profissional Profissional @relation(fields: [profissionalId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com Convite (DB-005). Não cria coluna aqui.
+  convites Convite[]
+
+  /// Mesmo e-mail não se repete dentro do mesmo profissional (vários nulos podem).
+  @@unique([profissionalId, email])
+  /// Listagem padrão do painel: "meus alunos ativos".
+  @@index([profissionalId, ativo])
+  @@map("alunos")
+}
+
+// ─── DB-005 · Identidade: convites ──────────────────────────────────────────
+
+/// Convite para o aluno ativar a conta. Guarda só o hash do token (SHA-256 em
+/// hex); o token puro vai apenas no link enviado ao aluno.
+/// Estado é calculado pelas datas (válido / usado / revogado / expirado).
+/// Reenviar = revogar o anterior e criar outro: nada é sobrescrito.
+model Convite {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alunoId    String    @map("aluno_id") @db.Uuid
+  /// Único. 64 caracteres hex; o banco garante o formato com CHECK (ver migration).
+  tokenHash  String    @unique @map("token_hash") @db.Char(64)
+  expiraEm   DateTime  @map("expira_em") @db.Timestamptz(3)
+  /// Preenchido quando o aluno ativa a conta. Usado e revogado não convivem (CHECK).
+  usadoEm    DateTime? @map("usado_em") @db.Timestamptz(3)
+  /// Preenchido quando o profissional cancela ou reenvia o convite.
+  revogadoEm DateTime? @map("revogado_em") @db.Timestamptz(3)
+  criadoEm   DateTime  @default(now()) @map("criado_em") @db.Timestamptz(3)
+
+  aluno Aluno @relation(fields: [alunoId], references: [id], onDelete: Restrict)
+
+  /// Convites de um aluno em ordem de criação (também serve à FK).
+  @@index([alunoId, criadoEm])
+  @@map("convites")
+}
+
+// ─── DB-006 · Identidade: sessões (refresh tokens) ──────────────────────────
+
+/// Sessão de login. Guarda só o hash do refresh token (SHA-256 em hex); o
+/// token puro fica apenas no app do usuário.
+/// Estado é calculado pelas datas (ativa / revogada / expirada).
+/// Refresh = revogar a sessão usada e criar outra: nada é sobrescrito.
+model Sessao {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId  String    @map("usuario_id") @db.Uuid
+  /// Único. 64 caracteres hex; o banco garante o formato com CHECK (ver migration).
+  tokenHash  String    @unique @map("token_hash") @db.Char(64)
+  expiraEm   DateTime  @map("expira_em") @db.Timestamptz(3)
+  /// Preenchido no logout, na troca de senha ou na rotação do token.
+  revogadoEm DateTime? @map("revogado_em") @db.Timestamptz(3)
+  criadoEm   DateTime  @default(now()) @map("criado_em") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+
+  /// Sessões de um usuário ("sair de todos os dispositivos"; também serve à FK).
+  @@index([usuarioId])
+  @@map("sessoes")
+}
+
+// ─── DB-007 · Questionários: modelos ────────────────────────────────────────
+
+/// Modelo de questionário (anamnese, avaliação ou feedback). As perguntas
+/// ficam em Pergunta (DB-008).
+/// profissionalId nulo = modelo padrão do sistema, sem dono (vem por seed).
+/// Duplicar = novo registro; desativar em vez de apagar.
+model ModeloQuestionario {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// Nulo = modelo padrão do sistema (ninguém é dono; serve de base para duplicar).
+  profissionalId String?    @map("profissional_id") @db.Uuid
+  tipo           TipoModelo
+  /// Não pode ser vazio; o banco garante com CHECK (ver migration).
+  nome           String     @db.VarChar(120)
+  /// Para qual sexo o modelo foi feito (anamnese M/F). Nulo = qualquer aluno.
+  sexoAlvo       Sexo?      @map("sexo_alvo")
+  /// Começa em 1; a API incrementa quando o conteúdo muda (CHECK >= 1).
+  versao         Int        @default(1)
+  ativo          Boolean    @default(true)
+  criadoEm       DateTime   @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm   DateTime   @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  profissional Profissional? @relation(fields: [profissionalId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com Pergunta (DB-008). Não cria coluna aqui.
+  perguntas Pergunta[]
+
+  /// Listagem do painel: "meus modelos de anamnese ativos" (também serve à FK).
+  @@index([profissionalId, tipo, ativo])
+  @@map("modelos_questionario")
+}
+
+// ─── DB-008 · Questionários: perguntas ──────────────────────────────────────
+
+/// Pergunta de um modelo. Quais colunas valem para cada tipo (opções, min/max,
+/// unidade, evolução) é garantido pelo banco com CHECK (ver migration).
+model Pergunta {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modeloId       String       @map("modelo_id") @db.Uuid
+  enunciado      String       @db.VarChar(500)
+  tipo           TipoPergunta
+  /// Só em escolha_unica/multipla_escolha: lista de textos, ex.: ["Sim","Não"].
+  opcoes         Json?
+  /// Posição no formulário (1, 2, 3...). Única dentro do modelo.
+  ordem          Int
+  obrigatoria    Boolean      @default(false)
+  /// Entra no gráfico de evolução. Só para numero e escala.
+  exibirEvolucao Boolean      @default(false) @map("exibir_evolucao")
+  /// Ex.: "kg", "cm". Só para numero e escala.
+  unidade        String?      @db.VarChar(20)
+  /// Limites. Opcionais em numero, obrigatórios em escala, nulos nos demais.
+  min            Decimal?     @db.Decimal(10, 2)
+  max            Decimal?     @db.Decimal(10, 2)
+  criadoEm       DateTime     @default(now()) @map("criado_em") @db.Timestamptz(3)
+
+  modelo ModeloQuestionario @relation(fields: [modeloId], references: [id], onDelete: Restrict)
+
+  /// Uma posição por modelo (também serve à FK e já ordena as perguntas).
+  @@unique([modeloId, ordem])
+  @@map("perguntas")
+}

@@ -1,0 +1,644 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "HealthFitAI API",
+    "version": "0.1.0",
+    "description": "API do HealthFitAI (app do aluno e painel do profissional)."
+  },
+  "components": {
+    "schemas": {
+      "Aluno": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "sexo": {
+            "type": "string",
+            "enum": [
+              "masculino",
+              "feminino"
+            ]
+          },
+          "dataNascimento": {
+            "type": "string",
+            "format": "date"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "telefone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ativo": {
+            "type": "boolean"
+          },
+          "criadoEm": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "atualizadoEm": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "nome",
+          "sexo",
+          "dataNascimento",
+          "email",
+          "telefone",
+          "ativo",
+          "criadoEm",
+          "atualizadoEm"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "example": "VALIDATION_ERROR"
+              },
+              "message": {
+                "type": "string",
+                "example": "Dados de entrada inválidos."
+              },
+              "details": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "type": "string",
+                      "example": "body.email"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Formato de e-mail inválido"
+                    }
+                  },
+                  "required": [
+                    "field",
+                    "message"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "description": "Formato único de erro da API."
+      },
+      "CriarAluno": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "example": "Ana Souza"
+          },
+          "sexo": {
+            "type": "string",
+            "enum": [
+              "masculino",
+              "feminino"
+            ]
+          },
+          "dataNascimento": {
+            "type": "string",
+            "format": "date",
+            "example": "2008-05-17"
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "example": "ana.souza@email.com"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "(11) 98765-4321"
+          }
+        },
+        "required": [
+          "nome",
+          "sexo",
+          "dataNascimento"
+        ],
+        "additionalProperties": false
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "totalItems": {
+            "type": "integer"
+          },
+          "totalPages": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "page",
+          "pageSize",
+          "totalItems",
+          "totalPages"
+        ]
+      },
+      "AtualizarAluno": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "example": "Ana Souza"
+          },
+          "sexo": {
+            "type": "string",
+            "enum": [
+              "masculino",
+              "feminino"
+            ]
+          },
+          "dataNascimento": {
+            "type": "string",
+            "format": "date",
+            "example": "2008-05-17"
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 254,
+            "example": "ana.souza@email.com"
+          },
+          "telefone": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "(11) 98765-4321"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/alunos": {
+      "post": {
+        "tags": [
+          "Alunos"
+        ],
+        "summary": "Cadastrar aluno",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarAluno"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Aluno cadastrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Aluno"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Alunos"
+        ],
+        "summary": "Listar alunos",
+        "description": "Busca por nome ou e-mail (q), filtros por situação e sexo, paginação e ordenação.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "description": "Página (começa em 1)."
+            },
+            "required": false,
+            "description": "Página (começa em 1).",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "description": "Itens por página (máx. 100)."
+            },
+            "required": false,
+            "description": "Itens por página (máx. 100).",
+            "name": "pageSize",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "nome",
+                "-nome",
+                "criadoEm",
+                "-criadoEm"
+              ],
+              "default": "nome",
+              "description": "Ordenação: nome, -nome, criadoEm, -criadoEm. \"-\" = decrescente."
+            },
+            "required": false,
+            "description": "Ordenação: nome, -nome, criadoEm, -criadoEm. \"-\" = decrescente.",
+            "name": "sort",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "description": "Busca textual."
+            },
+            "required": false,
+            "description": "Busca textual.",
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "description": "Filtra por situação (true/false)."
+            },
+            "required": false,
+            "description": "Filtra por situação (true/false).",
+            "name": "ativo",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "masculino",
+                "feminino"
+              ],
+              "description": "Filtra por sexo."
+            },
+            "required": false,
+            "description": "Filtra por sexo.",
+            "name": "sexo",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de alunos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Aluno"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PaginationMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alunos/{id}": {
+      "get": {
+        "tags": [
+          "Alunos"
+        ],
+        "summary": "Detalhar aluno",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Aluno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Aluno"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Alunos"
+        ],
+        "summary": "Editar aluno",
+        "description": "Envie só os campos que mudam. null em email/telefone remove o contato.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AtualizarAluno"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Aluno atualizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Aluno"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {}
+}
