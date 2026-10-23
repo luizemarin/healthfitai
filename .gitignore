@@ -1,0 +1,17 @@
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Variáveis de ambiente (apenas .env.example é versionado)
+.env
+.env.*
+!.env.example
+
+*.log
+.DS_Store
+
+# Expo (apps/mobile): cache local e pastas nativas geradas pelo prebuild
+.expo/
+apps/mobile/expo-env.d.ts
+apps/mobile/ios/
+apps/mobile/android/

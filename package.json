@@ -1,0 +1,36 @@
+{
+  "name": "healthfitai",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "workspaces": [
+    "apps/api",
+    "apps/web",
+    "apps/mobile"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev -w @healthfitai/api",
+    "dev:web": "npm run dev -w @healthfitai/web",
+    "dev:mobile": "npm run dev -w @healthfitai/mobile",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "openapi:generate": "npm run openapi:generate -w @healthfitai/api",
+    "openapi:check": "npm run openapi:check -w @healthfitai/api",
+    "api:types": "npm run openapi:generate && npm run api:types -w @healthfitai/web && npm run api:types -w @healthfitai/mobile",
+    "db:up": "docker compose up -d --wait postgres",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v",
+    "db:logs": "docker compose logs -f postgres",
+    "db:migrate": "npm run db:migrate -w @healthfitai/api",
+    "db:deploy": "npm run db:deploy -w @healthfitai/api",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "3.9.9"
+  }
+}
