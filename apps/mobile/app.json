@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "HealthFitAI",
+    "slug": "healthfitai",
+    "version": "0.1.0",
+    "scheme": "healthfitai",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#010736",
+    "ios": {
+      "bundleIdentifier": "com.healthfitai.app",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.healthfitai.app"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#010736"
+        }
+      ]
+    ]
+  }
+}
