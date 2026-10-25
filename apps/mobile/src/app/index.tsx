@@ -1,33 +1,34 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
 
-import { colors, fonts, fontSizes, spacing } from '../theme/tokens';
+import { Text, View } from 'react-native';
+
+import { signOut } from '../auth/auth';
+import { Button } from '../components/button';
 
 import type { ReactElement } from 'react';
 
 export default function HomeScreen(): ReactElement {
+  const [leaving, setLeaving] = useState(false);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Área do aluno</Text>
-      <Text style={styles.subtitle}>Seu acompanhamento começa aqui.</Text>
+    <View className="flex-1 justify-center gap-sm p-lg">
+      <Text className="font-heading text-xxl text-foreground">Área do aluno</Text>
+      <Text className="font-body text-md text-foreground-muted">
+        Seu acompanhamento começa aqui.
+      </Text>
+
+      <View className="mt-xl">
+        <Button
+          label="Sair"
+          loading={leaving}
+          variant="secondary"
+          onPress={() => {
+            setLeaving(true);
+            // Os tokens somem na hora; o guard do _layout volta para o login.
+            signOut().catch(() => {});
+          }}
+        />
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: spacing.lg,
-    gap: spacing.sm,
-  },
-  title: {
-    color: colors.text,
-    fontFamily: fonts.heading,
-    fontSize: fontSizes.xxl,
-  },
-  subtitle: {
-    color: colors.textMuted,
-    fontFamily: fonts.body,
-    fontSize: fontSizes.md,
-  },
-});

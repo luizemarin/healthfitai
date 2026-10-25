@@ -72,4 +72,6 @@ export interface AlunosRepository {
     alteracoes: AlteracoesAluno,
   ) => Promise<Aluno | null>;
   list: (profissionalId: string, filtros: FiltrosListagemAlunos) => Promise<PaginaAlunos>;
+  /** Ativa ou desativa (nunca apaga). Retorna null se o aluno não existir. */
+  definirAtivo: (profissionalId: string, id: string, ativo: boolean) => Promise<Aluno | null>;
 }

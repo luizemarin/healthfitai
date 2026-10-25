@@ -209,6 +209,880 @@
           }
         },
         "additionalProperties": false
+      },
+      "PerfilAluno": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "sexo": {
+            "type": "string",
+            "enum": [
+              "masculino",
+              "feminino"
+            ],
+            "description": "Define qual modelo de anamnese o aluno recebe."
+          },
+          "dataNascimento": {
+            "type": "string",
+            "format": "date"
+          },
+          "idade": {
+            "type": "integer",
+            "description": "Anos completos, calculado na hora."
+          },
+          "contato": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "telefone": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Só dígitos: DDD + número."
+              }
+            },
+            "required": [
+              "email",
+              "telefone"
+            ]
+          },
+          "ativo": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "nome",
+          "sexo",
+          "dataNascimento",
+          "idade",
+          "contato",
+          "ativo"
+        ]
+      },
+      "ListaConvites": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Convite"
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "Convite": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "valido",
+              "usado",
+              "revogado",
+              "expirado"
+            ]
+          },
+          "expiraEm": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "usadoEm": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "revogadoEm": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "criadoEm": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "expiraEm",
+          "usadoEm",
+          "revogadoEm",
+          "criadoEm"
+        ]
+      },
+      "ConviteGerado": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "valido",
+              "usado",
+              "revogado",
+              "expirado"
+            ]
+          },
+          "expiraEm": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "usadoEm": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "revogadoEm": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "criadoEm": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "link": {
+            "type": "string",
+            "format": "uri",
+            "description": "Link único para o aluno ativar a conta. Só é mostrado agora: guarde ou envie.",
+            "example": "http://localhost:8081/convite?token=Q2xhdWRlLUhlYWx0aEZpdEFJLXRva2VuLWV4ZW1wbG8"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "expiraEm",
+          "usadoEm",
+          "revogadoEm",
+          "criadoEm",
+          "link"
+        ]
+      },
+      "ModeloQuestionario": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "anamnese",
+              "avaliacao",
+              "feedback"
+            ]
+          },
+          "nome": {
+            "type": "string"
+          },
+          "sexoAlvo": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "masculino",
+              "feminino",
+              null
+            ]
+          },
+          "padrao": {
+            "type": "boolean",
+            "description": "Modelo do sistema: só leitura, pode ser duplicado."
+          },
+          "ativo": {
+            "type": "boolean"
+          },
+          "versao": {
+            "type": "integer",
+            "description": "Versão atual (BE-QST-04)."
+          },
+          "totalPerguntas": {
+            "type": "integer"
+          },
+          "criadoEm": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "atualizadoEm": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "perguntas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pergunta"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "tipo",
+          "nome",
+          "sexoAlvo",
+          "padrao",
+          "ativo",
+          "versao",
+          "totalPerguntas",
+          "criadoEm",
+          "atualizadoEm",
+          "perguntas"
+        ]
+      },
+      "Pergunta": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ordem": {
+            "type": "integer"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "texto_curto",
+              "texto_longo",
+              "escolha_unica",
+              "multipla_escolha",
+              "sim_nao",
+              "numero",
+              "escala",
+              "data"
+            ]
+          },
+          "enunciado": {
+            "type": "string"
+          },
+          "obrigatoria": {
+            "type": "boolean"
+          },
+          "exibirEvolucao": {
+            "type": "boolean"
+          },
+          "opcoes": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "Só em escolha_unica/multipla_escolha."
+          },
+          "unidade": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Só em numero/escala."
+          },
+          "min": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Só em numero/escala."
+          },
+          "max": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Só em numero/escala."
+          }
+        },
+        "required": [
+          "id",
+          "ordem",
+          "tipo",
+          "enunciado",
+          "obrigatoria",
+          "exibirEvolucao",
+          "opcoes",
+          "unidade",
+          "min",
+          "max"
+        ]
+      },
+      "CriarModeloQuestionario": {
+        "type": "object",
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "anamnese",
+              "avaliacao",
+              "feedback"
+            ]
+          },
+          "nome": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "example": "Anamnese inicial"
+          },
+          "sexoAlvo": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "masculino",
+              "feminino",
+              null
+            ],
+            "default": null,
+            "description": "Para qual sexo o modelo foi feito. null = qualquer aluno."
+          },
+          "perguntas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PerguntaEntrada"
+            },
+            "minItems": 1,
+            "maxItems": 100,
+            "description": "A ordem no formulário é a posição na lista."
+          }
+        },
+        "required": [
+          "tipo",
+          "nome",
+          "perguntas"
+        ],
+        "additionalProperties": false
+      },
+      "PerguntaEntrada": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "enum": [
+                  "texto_curto"
+                ]
+              },
+              "enunciado": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+                "example": "Qual o seu peso atual?"
+              },
+              "obrigatoria": {
+                "type": "boolean",
+                "default": false
+              },
+              "exibirEvolucao": {
+                "type": "boolean",
+                "enum": [
+                  false
+                ],
+                "default": false
+              }
+            },
+            "required": [
+              "tipo",
+              "enunciado"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "enum": [
+                  "texto_longo"
+                ]
+              },
+              "enunciado": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+                "example": "Qual o seu peso atual?"
+              },
+              "obrigatoria": {
+                "type": "boolean",
+                "default": false
+              },
+              "exibirEvolucao": {
+                "type": "boolean",
+                "enum": [
+                  false
+                ],
+                "default": false
+              }
+            },
+            "required": [
+              "tipo",
+              "enunciado"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "enum": [
+                  "escolha_unica"
+                ]
+              },
+              "enunciado": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+                "example": "Qual o seu peso atual?"
+              },
+              "obrigatoria": {
+                "type": "boolean",
+                "default": false
+              },
+              "opcoes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "minItems": 2,
+                "maxItems": 30,
+                "example": [
+                  "Sedentário",
+                  "Moderado",
+                  "Intenso"
+                ]
+              },
+              "exibirEvolucao": {
+                "type": "boolean",
+                "enum": [
+                  false
+                ],
+                "default": false
+              }
+            },
+            "required": [
+              "tipo",
+              "enunciado",
+              "opcoes"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "enum": [
+                  "multipla_escolha"
+                ]
+              },
+              "enunciado": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+                "example": "Qual o seu peso atual?"
+              },
+              "obrigatoria": {
+                "type": "boolean",
+                "default": false
+              },
+              "opcoes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "minItems": 2,
+                "maxItems": 30,
+                "example": [
+                  "Sedentário",
+                  "Moderado",
+                  "Intenso"
+                ]
+              },
+              "exibirEvolucao": {
+                "type": "boolean",
+                "enum": [
+                  false
+                ],
+                "default": false
+              }
+            },
+            "required": [
+              "tipo",
+              "enunciado",
+              "opcoes"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "enum": [
+                  "sim_nao"
+                ]
+              },
+              "enunciado": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+                "example": "Qual o seu peso atual?"
+              },
+              "obrigatoria": {
+                "type": "boolean",
+                "default": false
+              },
+              "exibirEvolucao": {
+                "type": "boolean",
+                "enum": [
+                  false
+                ],
+                "default": false
+              }
+            },
+            "required": [
+              "tipo",
+              "enunciado"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "enum": [
+                  "numero"
+                ]
+              },
+              "enunciado": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+                "example": "Qual o seu peso atual?"
+              },
+              "obrigatoria": {
+                "type": "boolean",
+                "default": false
+              },
+              "unidade": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20,
+                "example": "kg"
+              },
+              "min": {
+                "type": "number",
+                "minimum": -99999999.99,
+                "maximum": 99999999.99
+              },
+              "max": {
+                "type": "number",
+                "minimum": -99999999.99,
+                "maximum": 99999999.99
+              },
+              "exibirEvolucao": {
+                "type": "boolean",
+                "default": false,
+                "description": "A resposta vira série no gráfico de evolução (BE-QST-03)."
+              }
+            },
+            "required": [
+              "tipo",
+              "enunciado"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "enum": [
+                  "escala"
+                ]
+              },
+              "enunciado": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+                "example": "Qual o seu peso atual?"
+              },
+              "obrigatoria": {
+                "type": "boolean",
+                "default": false
+              },
+              "unidade": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20,
+                "example": "kg"
+              },
+              "min": {
+                "type": "integer",
+                "minimum": -1000,
+                "maximum": 1000
+              },
+              "max": {
+                "type": "integer",
+                "minimum": -1000,
+                "maximum": 1000
+              },
+              "exibirEvolucao": {
+                "type": "boolean",
+                "default": false,
+                "description": "A resposta vira série no gráfico de evolução (BE-QST-03)."
+              }
+            },
+            "required": [
+              "tipo",
+              "enunciado",
+              "min",
+              "max"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "enum": [
+                  "data"
+                ]
+              },
+              "enunciado": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+                "example": "Qual o seu peso atual?"
+              },
+              "obrigatoria": {
+                "type": "boolean",
+                "default": false
+              },
+              "exibirEvolucao": {
+                "type": "boolean",
+                "enum": [
+                  false
+                ],
+                "default": false
+              }
+            },
+            "required": [
+              "tipo",
+              "enunciado"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "ModeloQuestionarioResumo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "anamnese",
+              "avaliacao",
+              "feedback"
+            ]
+          },
+          "nome": {
+            "type": "string"
+          },
+          "sexoAlvo": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "masculino",
+              "feminino",
+              null
+            ]
+          },
+          "padrao": {
+            "type": "boolean",
+            "description": "Modelo do sistema: só leitura, pode ser duplicado."
+          },
+          "ativo": {
+            "type": "boolean"
+          },
+          "versao": {
+            "type": "integer",
+            "description": "Versão atual (BE-QST-04)."
+          },
+          "totalPerguntas": {
+            "type": "integer"
+          },
+          "criadoEm": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "atualizadoEm": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "tipo",
+          "nome",
+          "sexoAlvo",
+          "padrao",
+          "ativo",
+          "versao",
+          "totalPerguntas",
+          "criadoEm",
+          "atualizadoEm"
+        ]
+      },
+      "EditarModeloQuestionario": {
+        "type": "object",
+        "properties": {
+          "versao": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Versão que foi aberta para edição (vem do GET)."
+          },
+          "nome": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "example": "Anamnese inicial"
+          },
+          "sexoAlvo": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "masculino",
+              "feminino",
+              null
+            ],
+            "default": null,
+            "description": "Para qual sexo o modelo foi feito. null = qualquer aluno."
+          },
+          "perguntas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PerguntaEntrada"
+            },
+            "minItems": 1,
+            "maxItems": 100,
+            "description": "A ordem no formulário é a posição na lista."
+          }
+        },
+        "required": [
+          "versao",
+          "nome",
+          "perguntas"
+        ],
+        "additionalProperties": false
+      },
+      "DuplicarModeloQuestionario": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "example": "Anamnese inicial"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VersaoModeloResumo": {
+        "type": "object",
+        "properties": {
+          "numero": {
+            "type": "integer"
+          },
+          "totalPerguntas": {
+            "type": "integer"
+          },
+          "criadoEm": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "numero",
+          "totalPerguntas",
+          "criadoEm"
+        ]
+      },
+      "VersaoModelo": {
+        "type": "object",
+        "properties": {
+          "modeloId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "numero": {
+            "type": "integer"
+          },
+          "criadoEm": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "perguntas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pergunta"
+            }
+          }
+        },
+        "required": [
+          "modeloId",
+          "numero",
+          "criadoEm",
+          "perguntas"
+        ]
       }
     },
     "parameters": {}
@@ -618,6 +1492,1543 @@
           },
           "409": {
             "description": "Conflito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alunos/{id}/perfil": {
+      "get": {
+        "tags": [
+          "Alunos"
+        ],
+        "summary": "Perfil do aluno",
+        "description": "Dados básicos, sexo, data de nascimento (com idade calculada) e contato.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Perfil do aluno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PerfilAluno"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alunos/{id}/desativar": {
+      "post": {
+        "tags": [
+          "Alunos"
+        ],
+        "summary": "Desativar aluno",
+        "description": "Nada é apagado: o histórico continua guardado. O convite válido, se houver, é revogado. 409 se o aluno já estiver inativo (ALUNO_JA_INATIVO).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Aluno desativado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Aluno"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alunos/{id}/ativar": {
+      "post": {
+        "tags": [
+          "Alunos"
+        ],
+        "summary": "Ativar aluno",
+        "description": "Reativa um aluno inativo. 409 se o aluno já estiver ativo (ALUNO_JA_ATIVO).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Aluno ativado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Aluno"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alunos/{alunoId}/convites": {
+      "get": {
+        "tags": [
+          "Convites"
+        ],
+        "summary": "Listar convites do aluno",
+        "description": "Histórico do mais novo ao mais antigo, com status: valido, usado, revogado ou expirado.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "alunoId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Convites do aluno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListaConvites"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Convites"
+        ],
+        "summary": "Gerar convite",
+        "description": "Gera o link único de ativação. O link só aparece nesta resposta. 409 se o aluno estiver inativo (ALUNO_INATIVO) ou já tiver convite válido (CONVITE_JA_VALIDO).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "alunoId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Convite gerado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConviteGerado"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alunos/{alunoId}/convites/reenviar": {
+      "post": {
+        "tags": [
+          "Convites"
+        ],
+        "summary": "Reenviar convite",
+        "description": "Revoga o convite válido (se houver) e gera um novo link. O link anterior deixa de funcionar. 409 se o aluno estiver inativo (ALUNO_INATIVO).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "alunoId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Novo convite gerado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConviteGerado"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/alunos/{alunoId}/convites/revogar": {
+      "post": {
+        "tags": [
+          "Convites"
+        ],
+        "summary": "Revogar convite",
+        "description": "Revoga o convite válido; o link deixa de funcionar. 409 se não houver convite válido (SEM_CONVITE_VALIDO).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "alunoId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Convite revogado."
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/modelos": {
+      "post": {
+        "tags": [
+          "Questionários"
+        ],
+        "summary": "Criar modelo de questionário",
+        "description": "Cria o modelo já na versão 1. Tipos de pergunta (BE-QST-02): texto_curto, texto_longo, escolha_unica, multipla_escolha (com \"opcoes\"), sim_nao, numero (min/max/unidade opcionais), escala (min e max inteiros obrigatórios) e data. \"exibirEvolucao\" (BE-QST-03) só é aceito em numero e escala. A ordem das perguntas é a posição na lista.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarModeloQuestionario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Modelo criado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModeloQuestionario"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Questionários"
+        ],
+        "summary": "Listar modelos de questionário",
+        "description": "Modelos do profissional + modelos padrão do sistema (padrao = true). Busca por nome (q), filtros por tipo e situação, paginação e ordenação.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "description": "Página (começa em 1)."
+            },
+            "required": false,
+            "description": "Página (começa em 1).",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "description": "Itens por página (máx. 100)."
+            },
+            "required": false,
+            "description": "Itens por página (máx. 100).",
+            "name": "pageSize",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "nome",
+                "-nome",
+                "criadoEm",
+                "-criadoEm",
+                "atualizadoEm",
+                "-atualizadoEm"
+              ],
+              "default": "nome",
+              "description": "Ordenação: nome, -nome, criadoEm, -criadoEm, atualizadoEm, -atualizadoEm. \"-\" = decrescente."
+            },
+            "required": false,
+            "description": "Ordenação: nome, -nome, criadoEm, -criadoEm, atualizadoEm, -atualizadoEm. \"-\" = decrescente.",
+            "name": "sort",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "description": "Busca textual."
+            },
+            "required": false,
+            "description": "Busca textual.",
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "anamnese",
+                "avaliacao",
+                "feedback"
+              ],
+              "description": "Filtra por tipo."
+            },
+            "required": false,
+            "description": "Filtra por tipo.",
+            "name": "tipo",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "description": "Filtra por situação (true/false)."
+            },
+            "required": false,
+            "description": "Filtra por situação (true/false).",
+            "name": "ativo",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de modelos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ModeloQuestionarioResumo"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PaginationMeta"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/modelos/{id}": {
+      "get": {
+        "tags": [
+          "Questionários"
+        ],
+        "summary": "Detalhar modelo de questionário",
+        "description": "Retorna o modelo com as perguntas da versão atual.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Modelo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModeloQuestionario"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Questionários"
+        ],
+        "summary": "Editar modelo de questionário",
+        "description": "Substitui nome, sexo-alvo e perguntas (o tipo não muda). Se as perguntas mudarem, cria a versão seguinte e as respostas antigas continuam na versão delas (BE-QST-04). Envie em \"versao\" a versão que foi aberta: se outra edição salvou antes, responde 409 MODELO_DESATUALIZADO. 403 MODELO_PADRAO_SOMENTE_LEITURA para modelo padrão; 409 MODELO_INATIVO para modelo inativo. Tipos de pergunta (BE-QST-02): texto_curto, texto_longo, escolha_unica, multipla_escolha (com \"opcoes\"), sim_nao, numero (min/max/unidade opcionais), escala (min e max inteiros obrigatórios) e data. \"exibirEvolucao\" (BE-QST-03) só é aceito em numero e escala. A ordem das perguntas é a posição na lista.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditarModeloQuestionario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Modelo atualizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModeloQuestionario"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sem permissão.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/modelos/{id}/duplicar": {
+      "post": {
+        "tags": [
+          "Questionários"
+        ],
+        "summary": "Duplicar modelo de questionário",
+        "description": "Cria um modelo novo do profissional (versão 1, ativo) com as perguntas da versão atual. Funciona também com modelos padrão. Sem \"nome\", a cópia se chama \"<nome> (cópia)\".",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DuplicarModeloQuestionario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Cópia criada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModeloQuestionario"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/modelos/{id}/desativar": {
+      "post": {
+        "tags": [
+          "Questionários"
+        ],
+        "summary": "Desativar modelo de questionário",
+        "description": "Nada é apagado: as respostas antigas continuam ligadas ao modelo. 409 MODELO_JA_INATIVO; 403 MODELO_PADRAO_SOMENTE_LEITURA.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Modelo desativado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModeloQuestionario"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sem permissão.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/modelos/{id}/ativar": {
+      "post": {
+        "tags": [
+          "Questionários"
+        ],
+        "summary": "Ativar modelo de questionário",
+        "description": "409 MODELO_JA_ATIVO; 403 MODELO_PADRAO_SOMENTE_LEITURA.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Modelo ativado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModeloQuestionario"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sem permissão.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/modelos/{id}/versoes": {
+      "get": {
+        "tags": [
+          "Questionários"
+        ],
+        "summary": "Histórico de versões do modelo",
+        "description": "Versões do modelo, da mais recente para a mais antiga (BE-QST-04).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Versões.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/VersaoModeloResumo"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/modelos/{id}/versoes/{numero}": {
+      "get": {
+        "tags": [
+          "Questionários"
+        ],
+        "summary": "Detalhar versão do modelo",
+        "description": "Perguntas exatamente como estavam naquela versão (BE-QST-04).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "required": true,
+            "name": "numero",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Id do profissional (provisório até o login, BE-AUT-01)."
+            },
+            "required": true,
+            "description": "Id do profissional (provisório até o login, BE-AUT-01).",
+            "name": "x-profissional-id",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Versão.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersaoModelo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida (validação, JSON malformado).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso não encontrado.",
             "content": {
               "application/json": {
                 "schema": {

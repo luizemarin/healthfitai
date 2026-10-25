@@ -52,6 +52,10 @@ export default [
       // A versão do typescript-eslint entende tipos (ex.: parâmetros em assinaturas de função).
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'error',
+      // useAsync recebe deps como o useEffect: o ESLint confere as deps de quem chama.
+      'react-hooks/exhaustive-deps': ['error', { additionalHooks: '(useAsync)' }],
+      // defaultProps é legado em componentes de função; props opcionais do TS já cobrem isso.
+      'react/require-default-props': 'off',
     },
   },
   {

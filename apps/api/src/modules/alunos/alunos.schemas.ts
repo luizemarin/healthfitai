@@ -141,4 +141,21 @@ export const alunoResponseSchema = z
 
 export const listaAlunosResponseSchema = paginatedResponseSchema(alunoResponseSchema);
 
+/** BE-ALU-03 · Perfil: dados básicos, sexo, nascimento (com idade calculada) e contato. */
+export const perfilAlunoResponseSchema = z
+  .object({
+    id: z.uuid(),
+    nome: z.string(),
+    sexo: z.enum(SEXOS).meta({ description: 'Define qual modelo de anamnese o aluno recebe.' }),
+    dataNascimento: z.iso.date(),
+    idade: z.number().int().meta({ description: 'Anos completos, calculado na hora.' }),
+    contato: z.object({
+      email: z.string().nullable(),
+      telefone: z.string().nullable().meta({ description: 'Só dígitos: DDD + número.' }),
+    }),
+    ativo: z.boolean(),
+  })
+  .meta({ id: 'PerfilAluno' });
+
 export type AlunoResponse = z.output<typeof alunoResponseSchema>;
+export type PerfilAlunoResponse = z.output<typeof perfilAlunoResponseSchema>;

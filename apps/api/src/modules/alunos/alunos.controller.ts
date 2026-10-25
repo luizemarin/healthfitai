@@ -10,8 +10,8 @@ import { validateRequest } from '../../shared/http/validate-request';
 import type { RequestHandler } from 'express';
 
 import type { Aluno } from './alunos.repository';
-import type { AlunoResponse } from './alunos.schemas';
-import type { AlunosService } from './alunos.service';
+import type { AlunoResponse, PerfilAlunoResponse } from './alunos.schemas';
+import type { AlunosService, PerfilAluno } from './alunos.service';
 
 /** Formato público do aluno (não expõe o profissionalId). */
 function toResponse(aluno: Aluno): AlunoResponse {
@@ -25,6 +25,18 @@ function toResponse(aluno: Aluno): AlunoResponse {
     ativo: aluno.ativo,
     criadoEm: aluno.criadoEm.toISOString(),
     atualizadoEm: aluno.atualizadoEm.toISOString(),
+  };
+}
+
+function toPerfilResponse({ aluno, idade }: PerfilAluno): PerfilAlunoResponse {
+  return {
+    id: aluno.id,
+    nome: aluno.nome,
+    sexo: aluno.sexo,
+    dataNascimento: aluno.dataNascimento,
+    idade,
+    contato: { email: aluno.email, telefone: aluno.telefone },
+    ativo: aluno.ativo,
   };
 }
 
@@ -74,6 +86,33 @@ export class AlunosController {
     });
 
     const aluno = await this.service.atualizar(profissionalId, params.id, body);
+
+    response.json(toResponse(aluno));
+  };
+
+  perfil: RequestHandler = async (request, response) => {
+    const profissionalId = getProfissionalId(request);
+    const { params } = validateRequest(request, { params: alunoIdParamsSchema });
+
+    const perfil = await this.service.perfil(profissionalId, params.id);
+
+    response.json(toPerfilResponse(perfil));
+  };
+
+  desativar: RequestHandler = async (request, response) => {
+    const profissionalId = getProfissionalId(request);
+    const { params } = validateRequest(request, { params: alunoIdParamsSchema });
+
+    const aluno = await this.service.desativar(profissionalId, params.id);
+
+    response.json(toResponse(aluno));
+  };
+
+  ativar: RequestHandler = async (request, response) => {
+    const profissionalId = getProfissionalId(request);
+    const { params } = validateRequest(request, { params: alunoIdParamsSchema });
+
+    const aluno = await this.service.ativar(profissionalId, params.id);
 
     response.json(toResponse(aluno));
   };

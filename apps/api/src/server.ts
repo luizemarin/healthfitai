@@ -23,7 +23,7 @@ function bootstrap(): void {
     return;
   }
 
-  const app = createApp();
+  const app = createApp(env);
 
   // No Express 5 o callback do listen recebe o erro de bind (ex.: EADDRINUSE).
   app.listen(env.PORT, env.HOST, (error) => {

@@ -3,15 +3,1030 @@
  * Do not make direct changes to the file.
  */
 
-export type paths = Record<string, never>;
+export interface paths {
+  '/alunos': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Listar alunos
+     * @description Busca por nome ou e-mail (q), filtros por situação e sexo, paginação e ordenação.
+     */
+    get: {
+      parameters: {
+        query?: {
+          /** @description Página (começa em 1). */
+          page?: number;
+          /** @description Itens por página (máx. 100). */
+          pageSize?: number;
+          /** @description Ordenação: nome, -nome, criadoEm, -criadoEm. "-" = decrescente. */
+          sort?: 'nome' | '-nome' | 'criadoEm' | '-criadoEm';
+          /** @description Busca textual. */
+          q?: string;
+          /** @description Filtra por situação (true/false). */
+          ativo?: 'true' | 'false';
+          /** @description Filtra por sexo. */
+          sexo?: 'masculino' | 'feminino';
+        };
+        header: {
+          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+          'x-profissional-id': string;
+        };
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Página de alunos. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              data: components['schemas']['Aluno'][];
+              meta: components['schemas']['PaginationMeta'];
+            };
+          };
+        };
+        /** @description Requisição inválida (validação, JSON malformado). */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Não autenticado. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Erro interno. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    /** Cadastrar aluno */
+    post: {
+      parameters: {
+        query?: never;
+        header: {
+          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+          'x-profissional-id': string;
+        };
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': components['schemas']['CriarAluno'];
+        };
+      };
+      responses: {
+        /** @description Aluno cadastrado. */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['Aluno'];
+          };
+        };
+        /** @description Requisição inválida (validação, JSON malformado). */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Não autenticado. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Conflito. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Erro interno. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/alunos/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Detalhar aluno */
+    get: {
+      parameters: {
+        query?: never;
+        header: {
+          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+          'x-profissional-id': string;
+        };
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Aluno. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['Aluno'];
+          };
+        };
+        /** @description Requisição inválida (validação, JSON malformado). */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Não autenticado. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Recurso não encontrado. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Erro interno. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Editar aluno
+     * @description Envie só os campos que mudam. null em email/telefone remove o contato.
+     */
+    patch: {
+      parameters: {
+        query?: never;
+        header: {
+          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+          'x-profissional-id': string;
+        };
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': components['schemas']['AtualizarAluno'];
+        };
+      };
+      responses: {
+        /** @description Aluno atualizado. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['Aluno'];
+          };
+        };
+        /** @description Requisição inválida (validação, JSON malformado). */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Não autenticado. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Recurso não encontrado. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Conflito. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Erro interno. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
+  '/alunos/{id}/perfil': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Perfil do aluno
+     * @description Dados básicos, sexo, data de nascimento (com idade calculada) e contato.
+     */
+    get: {
+      parameters: {
+        query?: never;
+        header: {
+          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+          'x-profissional-id': string;
+        };
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Perfil do aluno. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['PerfilAluno'];
+          };
+        };
+        /** @description Requisição inválida (validação, JSON malformado). */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Não autenticado. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Recurso não encontrado. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Erro interno. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/alunos/{id}/desativar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Desativar aluno
+     * @description Nada é apagado: o histórico continua guardado. O convite válido, se houver, é revogado. 409 se o aluno já estiver inativo (ALUNO_JA_INATIVO).
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header: {
+          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+          'x-profissional-id': string;
+        };
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Aluno desativado. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['Aluno'];
+          };
+        };
+        /** @description Requisição inválida (validação, JSON malformado). */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Não autenticado. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Recurso não encontrado. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Conflito. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Erro interno. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/alunos/{id}/ativar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Ativar aluno
+     * @description Reativa um aluno inativo. 409 se o aluno já estiver ativo (ALUNO_JA_ATIVO).
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header: {
+          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+          'x-profissional-id': string;
+        };
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Aluno ativado. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['Aluno'];
+          };
+        };
+        /** @description Requisição inválida (validação, JSON malformado). */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Não autenticado. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Recurso não encontrado. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Conflito. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Erro interno. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/alunos/{alunoId}/convites': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Listar convites do aluno
+     * @description Histórico do mais novo ao mais antigo, com status: valido, usado, revogado ou expirado.
+     */
+    get: {
+      parameters: {
+        query?: never;
+        header: {
+          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+          'x-profissional-id': string;
+        };
+        path: {
+          alunoId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Convites do aluno. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ListaConvites'];
+          };
+        };
+        /** @description Requisição inválida (validação, JSON malformado). */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Não autenticado. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Recurso não encontrado. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Erro interno. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
+    /**
+     * Gerar convite
+     * @description Gera o link único de ativação. O link só aparece nesta resposta. 409 se o aluno estiver inativo (ALUNO_INATIVO) ou já tiver convite válido (CONVITE_JA_VALIDO).
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header: {
+          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+          'x-profissional-id': string;
+        };
+        path: {
+          alunoId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Convite gerado. */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ConviteGerado'];
+          };
+        };
+        /** @description Requisição inválida (validação, JSON malformado). */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Não autenticado. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Recurso não encontrado. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Conflito. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Erro interno. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/alunos/{alunoId}/convites/reenviar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Reenviar convite
+     * @description Revoga o convite válido (se houver) e gera um novo link. O link anterior deixa de funcionar. 409 se o aluno estiver inativo (ALUNO_INATIVO).
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header: {
+          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+          'x-profissional-id': string;
+        };
+        path: {
+          alunoId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Novo convite gerado. */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ConviteGerado'];
+          };
+        };
+        /** @description Requisição inválida (validação, JSON malformado). */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Não autenticado. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Recurso não encontrado. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Conflito. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Erro interno. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/alunos/{alunoId}/convites/revogar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Revogar convite
+     * @description Revoga o convite válido; o link deixa de funcionar. 409 se não houver convite válido (SEM_CONVITE_VALIDO).
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header: {
+          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+          'x-profissional-id': string;
+        };
+        path: {
+          alunoId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Convite revogado. */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description Requisição inválida (validação, JSON malformado). */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Não autenticado. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Recurso não encontrado. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Conflito. */
+        409: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+        /** @description Erro interno. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': components['schemas']['ErrorResponse'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+}
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: never;
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+  schemas: {
+    Aluno: {
+      /** Format: uuid */
+      id: string;
+      nome: string;
+      /** @enum {string} */
+      sexo: 'masculino' | 'feminino';
+      /** Format: date */
+      dataNascimento: string;
+      email: string | null;
+      telefone: string | null;
+      ativo: boolean;
+      /** Format: date-time */
+      criadoEm: string;
+      /** Format: date-time */
+      atualizadoEm: string;
+    };
+    /** @description Formato único de erro da API. */
+    ErrorResponse: {
+      error: {
+        /** @example VALIDATION_ERROR */
+        code: string;
+        /** @example Dados de entrada inválidos. */
+        message: string;
+        details?: {
+          /** @example body.email */
+          field: string;
+          /** @example Formato de e-mail inválido */
+          message: string;
+        }[];
+      };
+    };
+    CriarAluno: {
+      /** @example Ana Souza */
+      nome: string;
+      /** @enum {string} */
+      sexo: 'masculino' | 'feminino';
+      /**
+       * Format: date
+       * @example 2008-05-17
+       */
+      dataNascimento: string;
+      /** @example ana.souza@email.com */
+      email?: string;
+      /** @example (11) 98765-4321 */
+      telefone?: string;
+    };
+    PaginationMeta: {
+      page: number;
+      pageSize: number;
+      totalItems: number;
+      totalPages: number;
+    };
+    AtualizarAluno: {
+      /** @example Ana Souza */
+      nome?: string;
+      /** @enum {string} */
+      sexo?: 'masculino' | 'feminino';
+      /**
+       * Format: date
+       * @example 2008-05-17
+       */
+      dataNascimento?: string;
+      /** @example ana.souza@email.com */
+      email?: string | null;
+      /** @example (11) 98765-4321 */
+      telefone?: string | null;
+    };
+    PerfilAluno: {
+      /** Format: uuid */
+      id: string;
+      nome: string;
+      /**
+       * @description Define qual modelo de anamnese o aluno recebe.
+       * @enum {string}
+       */
+      sexo: 'masculino' | 'feminino';
+      /** Format: date */
+      dataNascimento: string;
+      /** @description Anos completos, calculado na hora. */
+      idade: number;
+      contato: {
+        email: string | null;
+        /** @description Só dígitos: DDD + número. */
+        telefone: string | null;
+      };
+      ativo: boolean;
+    };
+    ListaConvites: {
+      data: components['schemas']['Convite'][];
+    };
+    Convite: {
+      /** Format: uuid */
+      id: string;
+      /** @enum {string} */
+      status: 'valido' | 'usado' | 'revogado' | 'expirado';
+      /** Format: date-time */
+      expiraEm: string;
+      /** Format: date-time */
+      usadoEm: string | null;
+      /** Format: date-time */
+      revogadoEm: string | null;
+      /** Format: date-time */
+      criadoEm: string;
+    };
+    ConviteGerado: {
+      /** Format: uuid */
+      id: string;
+      /** @enum {string} */
+      status: 'valido' | 'usado' | 'revogado' | 'expirado';
+      /** Format: date-time */
+      expiraEm: string;
+      /** Format: date-time */
+      usadoEm: string | null;
+      /** Format: date-time */
+      revogadoEm: string | null;
+      /** Format: date-time */
+      criadoEm: string;
+      /**
+       * Format: uri
+       * @description Link único para o aluno ativar a conta. Só é mostrado agora: guarde ou envie.
+       * @example http://localhost:8081/convite?token=Q2xhdWRlLUhlYWx0aEZpdEFJLXRva2VuLWV4ZW1wbG8
+       */
+      link: string;
+    };
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;
