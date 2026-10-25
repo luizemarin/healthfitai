@@ -1,6 +1,8 @@
 import { OpenApiGeneratorV31, OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 
 import { registerAlunosOpenApi } from './modules/alunos/alunos.openapi';
+import { registerConvitesOpenApi } from './modules/convites/convites.openapi';
+import { registerQuestionariosOpenApi } from './modules/questionarios/questionarios.openapi';
 
 export type OpenApiDocument = ReturnType<OpenApiGeneratorV31['generateDocument']>;
 
@@ -15,7 +17,11 @@ type OpenApiRegistration = (registry: OpenAPIRegistry) => void;
  * Schemas com .meta({ id }) (ex.: ErrorResponse, PaginationMeta) viram components/$ref
  * automaticamente quando referenciados por uma rota; respostas de erro via errorResponses(...).
  */
-const registrations: readonly OpenApiRegistration[] = [registerAlunosOpenApi];
+const registrations: readonly OpenApiRegistration[] = [
+  registerAlunosOpenApi,
+  registerConvitesOpenApi,
+  registerQuestionariosOpenApi,
+];
 
 export function createOpenApiDocument(): OpenApiDocument {
   const registry = new OpenAPIRegistry();

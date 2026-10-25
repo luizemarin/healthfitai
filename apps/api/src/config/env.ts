@@ -4,6 +4,15 @@ export const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   HOST: z.string().trim().min(1).default('0.0.0.0'),
   PORT: z.coerce.number().int().min(1).max(65535).default(3333),
+  /** Endereço que o aluno abre para ativar a conta; o token vai em ?token=... (BE-ALU-04). */
+  CONVITE_URL_BASE: z.url().default('http://localhost:8081/convite'),
+  /** Por quantas horas o link de convite vale (padrão: 7 dias). */
+  CONVITE_VALIDADE_HORAS: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(24 * 30)
+    .default(24 * 7),
 });
 
 export type Env = Readonly<z.infer<typeof envSchema>>;

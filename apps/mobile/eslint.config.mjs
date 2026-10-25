@@ -12,7 +12,10 @@ const gitignorePath = path.resolve(dirname, '../../.gitignore');
 export default [
   includeIgnoreFile(gitignorePath),
   // Tipos gerados a partir do OpenAPI (npm run api:types): não editar à mão.
-  { name: 'project/ignores', ignores: ['src/api/generated/**', 'expo-env.d.ts'] },
+  {
+    name: 'project/ignores',
+    ignores: ['src/api/generated/**', 'expo-env.d.ts', 'src/nativewind-env.d.ts'],
+  },
 
   // Airbnb (JS base + React)
   { name: 'js/config', ...js.configs.recommended },
@@ -56,6 +59,9 @@ export default [
       'no-undef': 'off',
       // No RN o `style` é sempre objeto, exceto no StatusBar (style="light" | "dark").
       'react/style-prop-object': ['error', { allow: ['StatusBar'] }],
+      // React 19 removeu defaultProps de componentes de função: o padrão é valor default no
+      // parâmetro, e o TypeScript já obriga a tratar props opcionais.
+      'react/require-default-props': 'off',
     },
   },
   {
@@ -70,8 +76,13 @@ export default [
   {
     name: 'project/config-files',
     files: ['*.config.{ts,mjs,js}'],
+    // babel.config.js e metro.config.js rodam no Node em CommonJS (formato que o Expo carrega).
+    languageOptions: {
+      globals: { module: 'readonly', require: 'readonly', __dirname: 'readonly' },
+    },
     rules: {
       'import-x/no-extraneous-dependencies': ['error', { devDependencies: true }],
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
 

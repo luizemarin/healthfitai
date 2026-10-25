@@ -4,3 +4,6 @@ declare namespace NodeJS {
     readonly EXPO_PUBLIC_API_URL?: string;
   }
 }
+
+/** CSS importado só pelo efeito (src/theme/global.css, entrada do NativeWind). */
+declare module '*.css';

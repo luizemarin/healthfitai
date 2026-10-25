@@ -2,11 +2,58 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- viewport-fit=cover: usa a tela toda no iPhone; o CSS respeita o notch via safe-area. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
     <title>HealthFitAI — Painel do profissional</title>
+
+    <!-- Fontes (FE-SET-02). display=swap: se demorarem ou falharem, o texto aparece na fonte do sistema. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+    />
+
+    <!-- Estilo só da tela de carregamento, que aparece antes do app subir. -->
+    <style>
+      .hf-boot {
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 16px;
+        background: #010736;
+        color: #fcf1d0;
+        font-family: system-ui, sans-serif;
+        text-align: center;
+      }
+    </style>
   </head>
-  <body>
-    <div id="root"></div>
+  <body style="margin: 0">
+    <!-- O React substitui este conteúdo quando sobe. Se ficar aqui, o app não carregou. -->
+    <div id="root">
+      <div class="hf-boot">
+        <p id="hf-boot-message">Carregando o painel…</p>
+      </div>
+    </div>
+
+    <noscript>
+      <div class="hf-boot">
+        <p>O painel precisa de JavaScript ativado para funcionar.</p>
+      </div>
+    </noscript>
+
+    <script>
+      // Se o app não subir em 15s (ex.: falha de rede ao baixar o código), troca a mensagem.
+      setTimeout(function () {
+        var message = document.getElementById('hf-boot-message');
+        if (message) {
+          message.textContent =
+            'Não conseguimos abrir o painel. Verifique sua conexão e recarregue a página.';
+        }
+      }, 15000);
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

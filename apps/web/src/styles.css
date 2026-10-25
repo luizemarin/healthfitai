@@ -1,0 +1,120 @@
+/*
+ * CSS do app: Tailwind + o mínimo que não cabe em classes.
+ * Cores, fontes e faixas de tela vêm de tailwind.config.ts (gerado de src/theme/tokens.ts).
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    /* Marcador: se não existir, este CSS não carregou (verifyStylesheet em theme-status.ts). */
+    --hf-styles-loaded: 1;
+    /* Margem lateral das telas: cresce com a tela (FE-SET-03). */
+    --hf-gutter: theme(spacing.md);
+  }
+
+  @screen md {
+    :root {
+      --hf-gutter: theme(spacing.lg);
+    }
+  }
+
+  @screen lg {
+    :root {
+      --hf-gutter: theme(spacing.xl);
+    }
+  }
+
+  html {
+    /* iOS não aumenta a fonte sozinho ao girar o aparelho. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    /* Pensado para 360px+; abaixo disso a página rola de lado em vez de quebrar. */
+    @apply min-h-dvh min-w-[320px] bg-background font-body text-md text-foreground antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply mb-sm font-heading font-semibold leading-tight;
+  }
+
+  /* Títulos crescem com a tela. */
+  h1 {
+    @apply text-xl md:text-xxl;
+  }
+
+  h2 {
+    @apply text-lg md:text-xl;
+  }
+
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-foreground;
+  }
+}
+
+@layer components {
+  /* Botões: altura mínima de 44px, alvo de toque confortável (iPhone/iPad). */
+  .hf-button {
+    @apply inline-flex min-h-11 cursor-pointer items-center justify-center rounded-sm border border-transparent bg-primary px-5 py-2.5 font-semibold text-primary-foreground no-underline;
+  }
+
+  .hf-button--secondary {
+    @apply border-border bg-transparent text-foreground;
+  }
+
+  /* Ação que desfaz algo (revogar, desativar). */
+  .hf-button--danger {
+    @apply border-danger bg-transparent text-danger;
+  }
+
+  .hf-button:disabled {
+    @apply cursor-not-allowed opacity-60;
+  }
+
+  /* Campos de formulário: 44px de altura; borda de erro quando aria-invalid (Field). */
+  .hf-input {
+    @apply min-h-11 w-full rounded-sm border border-border bg-background px-3 py-2 text-md text-foreground placeholder:text-foreground-muted aria-[invalid=true]:border-2 aria-[invalid=true]:border-danger;
+  }
+
+  /*
+   * Select: a seta nativa fica colada na borda. Trocamos por uma própria, a 12px da borda
+   * (mesmo recuo do ícone do calendário no campo de data). Cor = creme do tema (text).
+   */
+  select.hf-input {
+    @apply appearance-none bg-[length:16px_16px] bg-[right_12px_center] bg-no-repeat pr-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23FCF1D0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  }
+
+  /* Etiqueta de situação (ativo/inativo, status do convite). */
+  .hf-badge {
+    @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold;
+  }
+
+  /* Margens laterais que respeitam o notch do iPhone deitado (safe-area). */
+  .hf-gutter-x {
+    padding-left: max(var(--hf-gutter), env(safe-area-inset-left));
+    padding-right: max(var(--hf-gutter), env(safe-area-inset-right));
+  }
+
+  /* Largura máxima do conteúdo + margens laterais. */
+  .hf-container {
+    @apply hf-gutter-x mx-auto w-full max-w-content;
+  }
+
+  /* Grade de cards: 1 coluna no celular, quantas couberem (mín. 280px) nas telas maiores. */
+  .hf-grid {
+    @apply grid grid-cols-[repeat(auto-fill,minmax(min(100%,280px),1fr))] gap-md;
+  }
+
+  /* Tabela larga no celular: rola de lado dentro do bloco, não a página inteira. */
+  .hf-table-scroll {
+    @apply max-w-full overflow-x-auto;
+  }
+}

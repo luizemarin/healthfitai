@@ -95,6 +95,18 @@ export class InMemoryAlunosRepository implements AlunosRepository {
     };
   }
 
+  async definirAtivo(profissionalId: string, id: string, ativo: boolean): Promise<Aluno | null> {
+    const aluno = this.buscar(profissionalId, id);
+    if (!aluno) {
+      return null;
+    }
+
+    const atualizado: Aluno = { ...aluno, ativo, atualizadoEm: new Date() };
+    this.alunos.set(id, atualizado);
+
+    return structuredClone(atualizado);
+  }
+
   private buscar(profissionalId: string, id: string): Aluno | undefined {
     const aluno = this.alunos.get(id);
     return aluno?.profissionalId === profissionalId ? aluno : undefined;
