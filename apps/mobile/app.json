@@ -6,7 +6,7 @@
     "scheme": "healthfitai",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "backgroundColor": "#010736",
+    "backgroundColor": "#081225",
     "ios": {
       "bundleIdentifier": "com.healthfitai.app",
       "supportsTablet": false
@@ -19,7 +19,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#010736"
+          "backgroundColor": "#081225"
         }
       ]
     ]

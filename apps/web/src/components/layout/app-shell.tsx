@@ -10,7 +10,11 @@ import type { ReactElement, ReactNode } from 'react';
 const navItems = [
   { to: '/', label: 'Início', end: true },
   // Sem `end`: continua marcado dentro de /alunos/novo, /alunos/:id…
+  { to: '/dashboard', label: 'Dashboard', end: false },
   { to: '/alunos', label: 'Alunos', end: false },
+  { to: '/questionarios', label: 'Questionários', end: false },
+  { to: '/fotos/poses', label: 'Poses das fotos', end: false },
+  { to: '/exercicios', label: 'Exercícios', end: false },
 ] as const;
 
 interface AppShellProps {

@@ -4,1029 +4,7664 @@
  */
 
 export interface paths {
-  '/alunos': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Listar alunos
-     * @description Busca por nome ou e-mail (q), filtros por situação e sexo, paginação e ordenação.
-     */
-    get: {
-      parameters: {
-        query?: {
-          /** @description Página (começa em 1). */
-          page?: number;
-          /** @description Itens por página (máx. 100). */
-          pageSize?: number;
-          /** @description Ordenação: nome, -nome, criadoEm, -criadoEm. "-" = decrescente. */
-          sort?: 'nome' | '-nome' | 'criadoEm' | '-criadoEm';
-          /** @description Busca textual. */
-          q?: string;
-          /** @description Filtra por situação (true/false). */
-          ativo?: 'true' | 'false';
-          /** @description Filtra por sexo. */
-          sexo?: 'masculino' | 'feminino';
+    "/alunos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        header: {
-          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
-          'x-profissional-id': string;
-        };
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Página de alunos. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': {
-              data: components['schemas']['Aluno'][];
-              meta: components['schemas']['PaginationMeta'];
+        /**
+         * Listar alunos
+         * @description Busca por nome ou e-mail (q), filtros por situação e sexo, paginação e ordenação.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Página (começa em 1). */
+                    page?: number;
+                    /** @description Itens por página (máx. 100). */
+                    pageSize?: number;
+                    /** @description Ordenação: nome, -nome, criadoEm, -criadoEm. "-" = decrescente. */
+                    sort?: "nome" | "-nome" | "criadoEm" | "-criadoEm";
+                    /** @description Busca textual. */
+                    q?: string;
+                    /** @description Filtra por situação (true/false). */
+                    ativo?: "true" | "false";
+                    /** @description Filtra por sexo. */
+                    sexo?: "masculino" | "feminino";
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path?: never;
+                cookie?: never;
             };
-          };
+            requestBody?: never;
+            responses: {
+                /** @description Página de alunos. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["Aluno"][];
+                            meta: components["schemas"]["PaginationMeta"];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        /** @description Requisição inválida (validação, JSON malformado). */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
+        put?: never;
+        /** Cadastrar aluno */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CriarAluno"];
+                };
+            };
+            responses: {
+                /** @description Aluno cadastrado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Aluno"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        /** @description Não autenticado. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Erro interno. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    put?: never;
-    /** Cadastrar aluno */
-    post: {
-      parameters: {
-        query?: never;
-        header: {
-          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
-          'x-profissional-id': string;
+    "/alunos/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        path?: never;
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          'application/json': components['schemas']['CriarAluno'];
+        /** Detalhar aluno */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Aluno. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Aluno"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-      };
-      responses: {
-        /** @description Aluno cadastrado. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['Aluno'];
-          };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Editar aluno
+         * @description Envie só os campos que mudam. null em email/telefone remove o contato.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AtualizarAluno"];
+                };
+            };
+            responses: {
+                /** @description Aluno atualizado. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Aluno"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        /** @description Requisição inválida (validação, JSON malformado). */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Não autenticado. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Conflito. */
-        409: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Erro interno. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-      };
+        trace?: never;
     };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/alunos/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/alunos/{id}/perfil": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Perfil do aluno
+         * @description Dados básicos, sexo, data de nascimento (com idade calculada) e contato.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Perfil do aluno. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PerfilAluno"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Detalhar aluno */
-    get: {
-      parameters: {
-        query?: never;
-        header: {
-          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
-          'x-profissional-id': string;
+    "/alunos/{id}/desativar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        path: {
-          id: string;
+        get?: never;
+        put?: never;
+        /**
+         * Desativar aluno
+         * @description Nada é apagado: o histórico continua guardado. O convite válido, se houver, é revogado. 409 se o aluno já estiver inativo (ALUNO_JA_INATIVO).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Aluno desativado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Aluno"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Aluno. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['Aluno'];
-          };
-        };
-        /** @description Requisição inválida (validação, JSON malformado). */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Não autenticado. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Recurso não encontrado. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Erro interno. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * Editar aluno
-     * @description Envie só os campos que mudam. null em email/telefone remove o contato.
-     */
-    patch: {
-      parameters: {
-        query?: never;
-        header: {
-          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
-          'x-profissional-id': string;
+    "/alunos/{id}/ativar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        path: {
-          id: string;
+        get?: never;
+        put?: never;
+        /**
+         * Ativar aluno
+         * @description Reativa um aluno inativo. 409 se o aluno já estiver ativo (ALUNO_JA_ATIVO).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Aluno ativado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Aluno"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          'application/json': components['schemas']['AtualizarAluno'];
-        };
-      };
-      responses: {
-        /** @description Aluno atualizado. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['Aluno'];
-          };
-        };
-        /** @description Requisição inválida (validação, JSON malformado). */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Não autenticado. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Recurso não encontrado. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Conflito. */
-        409: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Erro interno. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    trace?: never;
-  };
-  '/alunos/{id}/perfil': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/alunos/{alunoId}/convites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Listar convites do aluno
+         * @description Histórico do mais novo ao mais antigo, com status: valido, usado, revogado ou expirado.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Convites do aluno. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ListaConvites"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Gerar convite
+         * @description Gera o link único de ativação. O link só aparece nesta resposta. 409 se o aluno estiver inativo (ALUNO_INATIVO) ou já tiver convite válido (CONVITE_JA_VALIDO).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Convite gerado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ConviteGerado"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /**
-     * Perfil do aluno
-     * @description Dados básicos, sexo, data de nascimento (com idade calculada) e contato.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header: {
-          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
-          'x-profissional-id': string;
+    "/alunos/{alunoId}/convites/reenviar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        path: {
-          id: string;
+        get?: never;
+        put?: never;
+        /**
+         * Reenviar convite
+         * @description Revoga o convite válido (se houver) e gera um novo link. O link anterior deixa de funcionar. 409 se o aluno estiver inativo (ALUNO_INATIVO).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Novo convite gerado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ConviteGerado"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Perfil do aluno. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['PerfilAluno'];
-          };
-        };
-        /** @description Requisição inválida (validação, JSON malformado). */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Não autenticado. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Recurso não encontrado. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Erro interno. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/alunos/{id}/desativar': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/alunos/{alunoId}/convites/revogar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Revogar convite
+         * @description Revoga o convite válido; o link deixa de funcionar. 409 se não houver convite válido (SEM_CONVITE_VALIDO).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Convite revogado. */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Desativar aluno
-     * @description Nada é apagado: o histórico continua guardado. O convite válido, se houver, é revogado. 409 se o aluno já estiver inativo (ALUNO_JA_INATIVO).
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header: {
-          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
-          'x-profissional-id': string;
+    "/modelos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        path: {
-          id: string;
+        /**
+         * Listar modelos de questionário
+         * @description Modelos do profissional + modelos padrão do sistema (padrao = true): anamnese masculina, anamnese feminina e avaliação postural (BE-QST-05/06). Busca por nome (q), filtros por tipo e situação, paginação e ordenação.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Página (começa em 1). */
+                    page?: number;
+                    /** @description Itens por página (máx. 100). */
+                    pageSize?: number;
+                    /** @description Ordenação: nome, -nome, criadoEm, -criadoEm, atualizadoEm, -atualizadoEm. "-" = decrescente. */
+                    sort?: "nome" | "-nome" | "criadoEm" | "-criadoEm" | "atualizadoEm" | "-atualizadoEm";
+                    /** @description Busca textual. */
+                    q?: string;
+                    /** @description Filtra por tipo. */
+                    tipo?: "anamnese" | "avaliacao" | "feedback";
+                    /** @description Filtra por situação (true/false). */
+                    ativo?: "true" | "false";
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Página de modelos. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["ModeloQuestionarioResumo"][];
+                            meta: components["schemas"]["PaginationMeta"];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Aluno desativado. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['Aluno'];
-          };
+        put?: never;
+        /**
+         * Criar modelo de questionário
+         * @description Cria o modelo já na versão 1. Tipos de pergunta (BE-QST-02): texto_curto, texto_longo, escolha_unica, multipla_escolha (com "opcoes"), sim_nao, numero (min/max/unidade opcionais), escala (min e max inteiros obrigatórios) e data. "exibirEvolucao" (BE-QST-03) só é aceito em numero e escala. A ordem das perguntas é a posição na lista.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CriarModeloQuestionario"];
+                };
+            };
+            responses: {
+                /** @description Modelo criado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ModeloQuestionario"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        /** @description Requisição inválida (validação, JSON malformado). */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Não autenticado. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Recurso não encontrado. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Conflito. */
-        409: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Erro interno. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/alunos/{id}/ativar': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/modelos/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Detalhar modelo de questionário
+         * @description Retorna o modelo com as perguntas da versão atual.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Modelo. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ModeloQuestionario"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        /**
+         * Editar modelo de questionário
+         * @description Substitui nome, sexo-alvo e perguntas (o tipo não muda). Se as perguntas mudarem, cria a versão seguinte e as respostas antigas continuam na versão delas (BE-QST-04). Envie em "versao" a versão que foi aberta: se outra edição salvou antes, responde 409 MODELO_DESATUALIZADO. 403 MODELO_PADRAO_SOMENTE_LEITURA para modelo padrão; 409 MODELO_INATIVO para modelo inativo. Tipos de pergunta (BE-QST-02): texto_curto, texto_longo, escolha_unica, multipla_escolha (com "opcoes"), sim_nao, numero (min/max/unidade opcionais), escala (min e max inteiros obrigatórios) e data. "exibirEvolucao" (BE-QST-03) só é aceito em numero e escala. A ordem das perguntas é a posição na lista.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["EditarModeloQuestionario"];
+                };
+            };
+            responses: {
+                /** @description Modelo atualizado. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ModeloQuestionario"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Sem permissão. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Ativar aluno
-     * @description Reativa um aluno inativo. 409 se o aluno já estiver ativo (ALUNO_JA_ATIVO).
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header: {
-          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
-          'x-profissional-id': string;
+    "/modelos/{id}/duplicar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        path: {
-          id: string;
+        get?: never;
+        put?: never;
+        /**
+         * Duplicar modelo de questionário
+         * @description Cria um modelo novo do profissional (versão 1, ativo) com as perguntas da versão atual. Funciona também com modelos padrão. Sem "nome", a cópia se chama "<nome> (cópia)".
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["DuplicarModeloQuestionario"];
+                };
+            };
+            responses: {
+                /** @description Cópia criada. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ModeloQuestionario"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Aluno ativado. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['Aluno'];
-          };
-        };
-        /** @description Requisição inválida (validação, JSON malformado). */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Não autenticado. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Recurso não encontrado. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Conflito. */
-        409: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Erro interno. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/alunos/{alunoId}/convites': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/modelos/{id}/desativar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Desativar modelo de questionário
+         * @description Nada é apagado: as respostas antigas continuam ligadas ao modelo. 409 MODELO_JA_INATIVO; 403 MODELO_PADRAO_SOMENTE_LEITURA.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Modelo desativado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ModeloQuestionario"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Sem permissão. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /**
-     * Listar convites do aluno
-     * @description Histórico do mais novo ao mais antigo, com status: valido, usado, revogado ou expirado.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header: {
-          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
-          'x-profissional-id': string;
+    "/modelos/{id}/ativar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        path: {
-          alunoId: string;
+        get?: never;
+        put?: never;
+        /**
+         * Ativar modelo de questionário
+         * @description 409 MODELO_JA_ATIVO; 403 MODELO_PADRAO_SOMENTE_LEITURA.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Modelo ativado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ModeloQuestionario"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Sem permissão. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Convites do aluno. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ListaConvites'];
-          };
-        };
-        /** @description Requisição inválida (validação, JSON malformado). */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Não autenticado. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Recurso não encontrado. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Erro interno. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-      };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    put?: never;
-    /**
-     * Gerar convite
-     * @description Gera o link único de ativação. O link só aparece nesta resposta. 409 se o aluno estiver inativo (ALUNO_INATIVO) ou já tiver convite válido (CONVITE_JA_VALIDO).
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header: {
-          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
-          'x-profissional-id': string;
+    "/modelos/{id}/versoes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        path: {
-          alunoId: string;
+        /**
+         * Histórico de versões do modelo
+         * @description Versões do modelo, da mais recente para a mais antiga (BE-QST-04).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Versões. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["VersaoModeloResumo"][];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Convite gerado. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ConviteGerado'];
-          };
-        };
-        /** @description Requisição inválida (validação, JSON malformado). */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Não autenticado. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Recurso não encontrado. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Conflito. */
-        409: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Erro interno. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/alunos/{alunoId}/convites/reenviar': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/modelos/{id}/versoes/{numero}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Detalhar versão do modelo
+         * @description Perguntas exatamente como estavam naquela versão (BE-QST-04).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                    numero: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Versão. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["VersaoModelo"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Reenviar convite
-     * @description Revoga o convite válido (se houver) e gera um novo link. O link anterior deixa de funcionar. 409 se o aluno estiver inativo (ALUNO_INATIVO).
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header: {
-          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
-          'x-profissional-id': string;
+    "/alunos/{alunoId}/anamnese/modelo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        path: {
-          alunoId: string;
+        /**
+         * Modelo de anamnese do aluno
+         * @description BE-QST-05 · Escolhe o modelo de anamnese pelo sexo do aluno, nesta ordem: 1) do profissional para o sexo do aluno; 2) do profissional para qualquer sexo; 3) padrão do sistema para o sexo do aluno; 4) padrão para qualquer sexo. Só modelos ativos; empate fica com o editado mais recentemente. 404 NOT_FOUND se o aluno não existe; 409 ALUNO_INATIVO; 404 ANAMNESE_NAO_DISPONIVEL se nenhum modelo ativo serve.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Modelo escolhido. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ModeloQuestionario"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Novo convite gerado. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ConviteGerado'];
-          };
-        };
-        /** @description Requisição inválida (validação, JSON malformado). */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Não autenticado. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Recurso não encontrado. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Conflito. */
-        409: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Erro interno. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-      };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/alunos/{alunoId}/convites/revogar': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/alunos/{alunoId}/submissoes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Histórico de respostas do aluno
+         * @description BE-RSP-04 · Só respostas enviadas (rascunho não entra). Filtros por tipo, modelo e período (de/ate sobre a data da resposta, com fuso). Padrão: mais recentes primeiro. Aluno inativo continua consultável. 404 NOT_FOUND se o aluno não existe.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Página (começa em 1). */
+                    page?: number;
+                    /** @description Itens por página (máx. 100). */
+                    pageSize?: number;
+                    /** @description Ordenação: respondidoEm, -respondidoEm. "-" = decrescente. */
+                    sort?: "respondidoEm" | "-respondidoEm";
+                    /** @description Filtra por tipo de questionário. */
+                    tipo?: "anamnese" | "avaliacao" | "feedback";
+                    /** @description Filtra por modelo. */
+                    modeloId?: string;
+                    /** @description Respondidas a partir desta data/hora. */
+                    de?: string;
+                    /** @description Respondidas até esta data/hora. */
+                    ate?: string;
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Página do histórico. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["SubmissaoResumo"][];
+                            meta: components["schemas"]["PaginationMeta"];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Abrir ou retomar preenchimento
+         * @description BE-RSP-02 · Cria um rascunho do questionário para o aluno. Se já existir um rascunho daquele modelo, devolve o mesmo para continuar de onde parou. O rascunho usa a versão atual do modelo e fica nela até ser enviado. Avaliação é preenchida pelo profissional; anamnese e feedback, pelo aluno. 404 NOT_FOUND (aluno ou modelo); 409 ALUNO_INATIVO; 409 MODELO_INATIVO.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AbrirSubmissao"];
+                };
+            };
+            responses: {
+                /** @description Rascunho criado ou retomado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Submissao"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Revogar convite
-     * @description Revoga o convite válido; o link deixa de funcionar. 409 se não houver convite válido (SEM_CONVITE_VALIDO).
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header: {
-          /** @description Id do profissional (provisório até o login, BE-AUT-01). */
-          'x-profissional-id': string;
+    "/alunos/{alunoId}/submissoes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        path: {
-          alunoId: string;
+        /**
+         * Detalhar respostas
+         * @description Perguntas da versão que foi respondida, cada uma com o valor dado (null = sem resposta). Serve para exibir uma resposta enviada e para retomar um rascunho. 404 NOT_FOUND (aluno ou submissão).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Submissão. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Submissao"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Convite revogado. */
-        204: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Salvar rascunho (autosave)
+         * @description BE-RSP-02 · Grava só as perguntas enviadas; as demais ficam como estão. valor null apaga a resposta. Obrigatórias não são cobradas aqui (só ao finalizar). 400 VALIDATION_ERROR se algum valor não combina com a pergunta. 404 NOT_FOUND (aluno ou submissão); 409 ALUNO_INATIVO; 409 SUBMISSAO_FINALIZADA (já enviada, não muda mais). Formato de "valor" por tipo de pergunta: texto_curto/texto_longo/escolha_unica → texto; data → "AAAA-MM-DD"; numero/escala → número (respeitando min/max); sim_nao → true/false; multipla_escolha → lista de textos. Erros por item vêm em details (ex.: field "body.respostas.2.valor").
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SalvarRascunho"];
+                };
+            };
+            responses: {
+                /** @description Rascunho salvo. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Submissao"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
         };
-        /** @description Requisição inválida (validação, JSON malformado). */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Não autenticado. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Recurso não encontrado. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Conflito. */
-        409: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-        /** @description Erro interno. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['ErrorResponse'];
-          };
-        };
-      };
+        trace?: never;
     };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
+    "/alunos/{alunoId}/submissoes/{id}/finalizar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Enviar respostas
+         * @description BE-RSP-01 · Transforma o rascunho em registro final, datado e somente leitura. Responder de novo depois disso cria outra submissão (nada é sobrescrito). "respostas" (opcional) grava as últimas alterações antes de enviar. BE-RSP-03 · Em avaliação, "respondidoEm" (opcional) é a data em que o profissional avaliou; padrão: agora. Não pode estar no futuro. 400 RESPOSTAS_OBRIGATORIAS_PENDENTES (details lista as perguntas); 400 DATA_RESPOSTA_NAO_PERMITIDA (data fora de avaliação). 404 NOT_FOUND (aluno ou submissão); 409 ALUNO_INATIVO; 409 SUBMISSAO_FINALIZADA (já enviada, não muda mais).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["FinalizarSubmissao"];
+                };
+            };
+            responses: {
+                /** @description Respostas enviadas. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Submissao"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/feedback-agendamentos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Listar agendamentos do aluno
+         * @description BE-FBK-01 · Padrão: próxima liberação mais cedo primeiro. Aluno inativo continua consultável. 404 NOT_FOUND se o aluno não existe.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Página (começa em 1). */
+                    page?: number;
+                    /** @description Itens por página (máx. 100). */
+                    pageSize?: number;
+                    /** @description Ordenação: proximaLiberacao, -proximaLiberacao, criadoEm, -criadoEm. "-" = decrescente. */
+                    sort?: "proximaLiberacao" | "-proximaLiberacao" | "criadoEm" | "-criadoEm";
+                    /** @description Filtra por situação (true/false). */
+                    ativo?: "true" | "false";
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Página de agendamentos. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["AgendamentoFeedback"][];
+                            meta: components["schemas"]["PaginationMeta"];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Agendar feedback
+         * @description BE-FBK-01 · Programa o envio de um questionário de feedback para o aluno: semanal, quinzenal, mensal ou avulso (uma vez só). BE-FBK-03 · "lembreteDias" (opcional) reenvia o aviso se o aluno não responder nesse prazo. Regras (400 VALIDATION_ERROR, com details por campo): a data não pode estar no passado; na recorrência mensal o dia deve ser de 1 a 28 (horário de Brasília); o lembrete deve sair antes do próximo feedback (semanal ≤ 6 dias, quinzenal ≤ 13, mensal ≤ 27, avulso ≤ 30). 404 NOT_FOUND (aluno ou modelo); 400 MODELO_NAO_E_FEEDBACK; 409 MODELO_INATIVO; 409 ALUNO_INATIVO; 409 AGENDAMENTO_DUPLICADO (já existe agendamento ativo do mesmo modelo para o aluno).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CriarAgendamentoFeedback"];
+                };
+            };
+            responses: {
+                /** @description Agendamento criado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AgendamentoFeedback"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/feedback-agendamentos/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Detalhar agendamento
+         * @description 404 NOT_FOUND (aluno ou agendamento).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Agendamento. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AgendamentoFeedback"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Editar agendamento
+         * @description BE-FBK-01/03 · Só os campos enviados mudam (lembreteDias: null remove o lembrete). Vale para os próximos feedbacks; o prazo do lembrete vale também para os que ainda esperam resposta. O modelo não muda: desative e crie outro. Regras (400 VALIDATION_ERROR, com details por campo): a data não pode estar no passado; na recorrência mensal o dia deve ser de 1 a 28 (horário de Brasília); o lembrete deve sair antes do próximo feedback (semanal ≤ 6 dias, quinzenal ≤ 13, mensal ≤ 27, avulso ≤ 30). 404 NOT_FOUND (aluno ou agendamento); 409 ALUNO_INATIVO; 409 AGENDAMENTO_INATIVO.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["EditarAgendamentoFeedback"];
+                };
+            };
+            responses: {
+                /** @description Agendamento alterado. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AgendamentoFeedback"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/alunos/{alunoId}/feedback-agendamentos/{id}/desativar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Desativar agendamento
+         * @description Para de liberar feedbacks e de mandar lembretes. Nada é apagado: os feedbacks já enviados continuam no histórico. 404 NOT_FOUND; 409 AGENDAMENTO_JA_INATIVO.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Agendamento desativado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AgendamentoFeedback"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/feedback-agendamentos/{id}/ativar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reativar agendamento
+         * @description Volta a liberar feedbacks. "proximaLiberacao" é obrigatória quando a data salva já passou. Regras (400 VALIDATION_ERROR, com details por campo): a data não pode estar no passado; na recorrência mensal o dia deve ser de 1 a 28 (horário de Brasília); o lembrete deve sair antes do próximo feedback (semanal ≤ 6 dias, quinzenal ≤ 13, mensal ≤ 27, avulso ≤ 30). 404 NOT_FOUND (aluno ou modelo); 400 MODELO_NAO_E_FEEDBACK; 409 MODELO_INATIVO; 409 ALUNO_INATIVO; 409 AGENDAMENTO_DUPLICADO (já existe agendamento ativo do mesmo modelo para o aluno). 409 AGENDAMENTO_JA_ATIVO.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["AtivarAgendamentoFeedback"];
+                };
+            };
+            responses: {
+                /** @description Agendamento reativado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["AgendamentoFeedback"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/feedbacks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Feedbacks do aluno
+         * @description BE-FBK-04 · Cada liberação de um agendamento, filtrável por status. Status (BE-FBK-04): agendado → enviado → respondido, ou enviado → atrasado (lembrete saiu sem resposta) → respondido. Padrão: mais recentes primeiro. 404 NOT_FOUND se o aluno não existe.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Página (começa em 1). */
+                    page?: number;
+                    /** @description Itens por página (máx. 100). */
+                    pageSize?: number;
+                    /** @description Ordenação: criadoEm, -criadoEm, enviadoEm, -enviadoEm. "-" = decrescente. */
+                    sort?: "criadoEm" | "-criadoEm" | "enviadoEm" | "-enviadoEm";
+                    /** @description Filtra por status. */
+                    status?: "agendado" | "enviado" | "respondido" | "atrasado";
+                    /** @description Só os feedbacks de um agendamento. */
+                    agendamentoId?: string;
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Página de feedbacks. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["FeedbackResumo"][];
+                            meta: components["schemas"]["PaginationMeta"];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/feedbacks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Detalhar feedback
+         * @description Status, datas e comentários do profissional (do mais antigo ao mais novo). As respostas ficam em GET /alunos/{alunoId}/submissoes/{submissaoId}. Status (BE-FBK-04): agendado → enviado → respondido, ou enviado → atrasado (lembrete saiu sem resposta) → respondido. 404 NOT_FOUND (aluno ou feedback).
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Feedback. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Feedback"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/feedbacks/{id}/comentarios": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Comentar feedback
+         * @description BE-FBK-05 · Comentário do profissional, visível ao aluno. Só em feedback respondido. Nada é sobrescrito: para corrigir, escreva outro comentário. 404 NOT_FOUND (aluno ou feedback); 409 ALUNO_INATIVO; 409 FEEDBACK_NAO_RESPONDIDO.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CriarComentarioFeedback"];
+                };
+            };
+            responses: {
+                /** @description Comentário criado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ComentarioFeedback"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/poses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Listar poses
+         * @description BE-FOT-01 · Poses do profissional, na ordem em que o app pede as fotos. Na primeira vez, o profissional recebe uma cópia das poses padrão (Frente, Perfil e Costas).
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Filtra por situação (true/false). Sem o filtro, vêm todas. */
+                    ativa?: "true" | "false";
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Poses. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["PoseFoto"][];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Adicionar pose
+         * @description BE-FOT-01 · A pose nova entra no fim da lista. 409 POSE_DUPLICADA (já existe uma ativa com o mesmo nome, sem diferenciar maiúsculas/acentos); 409 LIMITE_POSES (máximo de 10 ativas).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CriarPoseFoto"];
+                };
+            };
+            responses: {
+                /** @description Pose criada. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PoseFoto"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/poses/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Renomear pose
+         * @description BE-FOT-01 · As fotos já tiradas passam a mostrar o nome novo. 404 NOT_FOUND; 409 POSE_INATIVA; 409 POSE_DUPLICADA.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["RenomearPoseFoto"];
+                };
+            };
+            responses: {
+                /** @description Pose renomeada. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PoseFoto"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/poses/ordem": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Reordenar poses
+         * @description BE-FOT-01 · Envie TODAS as poses ativas, cada uma uma vez, na nova ordem. As desativadas vão para o fim. 400 VALIDATION_ERROR (details dizem qual id não existe/está desativado e quais poses faltaram).
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ReordenarPosesFoto"];
+                };
+            };
+            responses: {
+                /** @description Poses na nova ordem. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["PoseFoto"][];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/poses/{id}/desativar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Remover (desativar) pose
+         * @description BE-FOT-01 · A pose some do app, mas nada é apagado: as fotos antigas continuam ligadas a ela. 404 NOT_FOUND; 409 POSE_JA_INATIVA; 409 ULTIMA_POSE_ATIVA (precisa sobrar pelo menos uma).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Pose desativada. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PoseFoto"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/poses/{id}/ativar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reativar pose
+         * @description BE-FOT-01 · A pose volta no fim da lista. 404 NOT_FOUND; 409 POSE_JA_ATIVA; 409 POSE_DUPLICADA; 409 LIMITE_POSES.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Pose reativada. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PoseFoto"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/fotos/envios": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Pedir envio de foto (passo 1)
+         * @description BE-FOT-02 · Devolve uma URL assinada (vale 10 min) para mandar o arquivo DIRETO ao storage: faça PUT na "url" com os "headers" e o arquivo no corpo. Tipo e tamanho fazem parte da assinatura: arquivo diferente do declarado é recusado pelo storage (403). Depois do PUT, envie "confirmacao" para POST /alunos/{alunoId}/fotos. 404 NOT_FOUND (aluno ou pose); 409 ALUNO_INATIVO; 409 POSE_INATIVA; 413 ARQUIVO_MUITO_GRANDE (limite do servidor, FOTO_TAMANHO_MAXIMO_MB); 503 STORAGE_NAO_CONFIGURADO / STORAGE_INDISPONIVEL (storage de fotos).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CriarEnvioFoto"];
+                };
+            };
+            responses: {
+                /** @description URL de envio. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["EnvioFoto"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Payload muito grande. */
+                413: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Serviço externo indisponível ou não configurado (ex.: storage de fotos). */
+                503: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/fotos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Galeria do aluno (por data)
+         * @description BE-FOT-04 · Fotos agrupadas por dia e, dentro do dia, pela ordem das poses. A paginação é por DATA (pageSize = quantos dias). Aluno inativo continua consultável. As URLs são assinadas e valem poucos minutos ("urlsExpiramEm"); depois disso, busque de novo. O bucket é privado: não existe URL pública permanente. 404 NOT_FOUND (aluno ou pose do filtro); 503 STORAGE_NAO_CONFIGURADO / STORAGE_INDISPONIVEL (storage de fotos).
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Página (começa em 1). */
+                    page?: number;
+                    /** @description Itens por página (máx. 100). */
+                    pageSize?: number;
+                    /** @description Ordem das datas. "-" = mais recentes primeiro (padrão). */
+                    sort?: "dataRegistro" | "-dataRegistro";
+                    /** @description Só fotos desta pose. */
+                    poseId?: string;
+                    /** @description Desde esta data (inclusive). */
+                    de?: string;
+                    /** @description Até esta data (inclusive). */
+                    ate?: string;
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Página de dias com fotos. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["FotosDoDia"][];
+                            meta: components["schemas"]["PaginationMeta"];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Serviço externo indisponível ou não configurado (ex.: storage de fotos). */
+                503: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Confirmar envio (passo 2)
+         * @description BE-FOT-02/03 · Confere o arquivo enviado, processa (compressão JPEG, miniatura e remoção de EXIF/GPS) e cria a foto. Confirmar duas vezes o mesmo envio dá 404 (ele já virou foto). 404 ENVIO_NAO_ENCONTRADO (PUT não feito, expirado ou pose/data diferentes do pedido); 404 NOT_FOUND (aluno ou pose); 400 IMAGEM_INVALIDA (não é JPEG/PNG/WebP, resolução acima de 50 MP ou arquivo corrompido); 409 ALUNO_INATIVO; 409 POSE_INATIVA; 413 ARQUIVO_MUITO_GRANDE; 503 STORAGE_NAO_CONFIGURADO / STORAGE_INDISPONIVEL (storage de fotos).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ConfirmarEnvioFoto"];
+                };
+            };
+            responses: {
+                /** @description Foto criada. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Foto"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Payload muito grande. */
+                413: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Serviço externo indisponível ou não configurado (ex.: storage de fotos). */
+                503: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/fotos/comparar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Comparador antes/depois
+         * @description BE-FOT-04 · Uma linha por pose com a foto de cada data, pronta para o slider. Se houver mais de uma foto da mesma pose no dia, vem a mais recente. Pose sem foto em nenhuma das datas não aparece. As datas disponíveis vêm da galeria. As URLs são assinadas e valem poucos minutos ("urlsExpiramEm"); depois disso, busque de novo. O bucket é privado: não existe URL pública permanente. 404 NOT_FOUND (aluno); 404 SEM_FOTOS_NA_DATA; 503 STORAGE_NAO_CONFIGURADO / STORAGE_INDISPONIVEL (storage de fotos).
+         */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Data da foto "antes". */
+                    antes: string;
+                    /** @description Data da foto "depois". */
+                    depois: string;
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Comparação. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ComparacaoFotos"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Serviço externo indisponível ou não configurado (ex.: storage de fotos). */
+                503: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tipos-medida": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Listar tipos de medida
+         * @description BE-MED-02 · Tipos do profissional, por ordem de criação. Na primeira vez, o profissional recebe uma cópia dos tipos padrão (Tórax, Cintura, Abdômen, Quadril, Braços, Coxas, Panturrilhas e Gordura corporal).
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Filtra por situação (true/false). Sem o filtro, vêm todos. */
+                    ativo?: "true" | "false";
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Tipos de medida. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["TipoMedida"][];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Adicionar tipo de medida
+         * @description BE-MED-02 · 409 TIPO_MEDIDA_DUPLICADO (já existe um ativo com o mesmo nome, sem diferenciar maiúsculas/acentos); 409 LIMITE_TIPOS_MEDIDA (máximo de 30 ativos).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CriarTipoMedida"];
+                };
+            };
+            responses: {
+                /** @description Tipo criado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TipoMedida"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tipos-medida/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Editar tipo de medida
+         * @description BE-MED-02 · Renomear é sempre permitido (o histórico passa a mostrar o nome novo). A unidade só muda enquanto o tipo não tem registros. 404 NOT_FOUND; 409 TIPO_MEDIDA_INATIVO; 409 TIPO_MEDIDA_DUPLICADO; 409 TIPO_MEDIDA_COM_REGISTROS.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["EditarTipoMedida"];
+                };
+            };
+            responses: {
+                /** @description Tipo alterado. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TipoMedida"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/tipos-medida/{id}/desativar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Remover (desativar) tipo de medida
+         * @description BE-MED-02 · O tipo some da tela de lançamento, mas nada é apagado: o histórico continua no gráfico. 404 NOT_FOUND; 409 TIPO_MEDIDA_JA_INATIVO.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Tipo desativado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TipoMedida"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tipos-medida/{id}/ativar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reativar tipo de medida
+         * @description BE-MED-02 · 404 NOT_FOUND; 409 TIPO_MEDIDA_JA_ATIVO; 409 TIPO_MEDIDA_DUPLICADO; 409 LIMITE_TIPOS_MEDIDA.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Tipo reativado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TipoMedida"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/pesos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Histórico de peso
+         * @description BE-MED-01 · Pesagens do aluno por data. Pode haver mais de uma no mesmo dia (a mais recente vale). Aluno inativo continua consultável. 404 NOT_FOUND (aluno).
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Página (começa em 1). */
+                    page?: number;
+                    /** @description Itens por página (máx. 100). */
+                    pageSize?: number;
+                    /** @description Ordem por data. "-" = mais recentes primeiro (padrão). */
+                    sort?: "dataRegistro" | "-dataRegistro";
+                    /** @description Desde esta data (inclusive). */
+                    de?: string;
+                    /** @description Até esta data (inclusive). */
+                    ate?: string;
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Página de pesagens. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["RegistroPeso"][];
+                            meta: components["schemas"]["PaginationMeta"];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Registrar peso
+         * @description BE-MED-01 · Nada é sobrescrito: registrar de novo = novo registro. Quem lançou vem em "registradoPor". 404 NOT_FOUND (aluno); 409 ALUNO_INATIVO.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["RegistrarPeso"];
+                };
+            };
+            responses: {
+                /** @description Peso registrado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RegistroPeso"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/medidas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Histórico de medidas
+         * @description BE-MED-01 · Medidas do aluno por data, com o tipo e a unidade. Filtrando por "tipoId", é uma curva do gráfico de evolução. Tipos desativados continuam aparecendo no histórico. 404 NOT_FOUND (aluno ou tipo do filtro).
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Página (começa em 1). */
+                    page?: number;
+                    /** @description Itens por página (máx. 100). */
+                    pageSize?: number;
+                    /** @description Ordem por data. "-" = mais recentes primeiro (padrão). */
+                    sort?: "dataRegistro" | "-dataRegistro";
+                    /** @description Desde esta data (inclusive). */
+                    de?: string;
+                    /** @description Até esta data (inclusive). */
+                    ate?: string;
+                    /** @description Só registros deste tipo (uma curva). */
+                    tipoId?: string;
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Página de medidas. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["RegistroMedida"][];
+                            meta: components["schemas"]["PaginationMeta"];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Registrar medidas do dia
+         * @description BE-MED-01 · Várias medidas de uma vez (uma por tipo), todas na mesma data: ou entram todas, ou nenhuma. Nada é sobrescrito: registrar de novo = novo registro. Quem lançou vem em "registradoPor". Erros de um item trazem "details.field" apontando o item (ex.: body.medidas.2.tipoId). 404 NOT_FOUND (aluno ou tipo); 409 ALUNO_INATIVO; 409 TIPO_MEDIDA_INATIVO; 400 VALIDATION_ERROR (ex.: medida em % acima de 100).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["RegistrarMedidas"];
+                };
+            };
+            responses: {
+                /** @description Medidas registradas (na ordem enviada). */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["RegistroMedida"][];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/evolucao": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Séries de evolução do aluno
+         * @description BE-EVO-01 · Tudo o que o gráfico de evolução precisa numa chamada: peso, medidas (uma série por tipo) e perguntas marcadas com "exibir no gráfico de evolução" (uma série por pergunta, só de questionários enviados). Pontos em ordem de data crescente, um por dia (no mesmo dia, vale o valor mais recente). A pergunta continua na mesma curva depois que o modelo ganha versão nova, desde que o enunciado e a unidade não mudem. Tipos de medida desativados continuam aparecendo. Aluno inativo continua consultável. 404 NOT_FOUND (aluno).
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Desde esta data (inclusive). Sem o filtro, desde o primeiro registro. */
+                    de?: string;
+                    /** @description Até esta data (inclusive). Sem o filtro, até o último registro. */
+                    ate?: string;
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Séries de evolução. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Evolucao"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/exercicios": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Listar exercícios
+         * @description BE-EXE-01 · Exercícios da biblioteca (excluídos não aparecem). "q" busca no nome e no grupo muscular.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Página (começa em 1). */
+                    page?: number;
+                    /** @description Itens por página (máx. 100). */
+                    pageSize?: number;
+                    /** @description Ordenação: nome, -nome, criadoEm, -criadoEm. "-" = decrescente. */
+                    sort?: "nome" | "-nome" | "criadoEm" | "-criadoEm";
+                    /** @description Busca textual. */
+                    q?: string;
+                    /** @description Só deste grupo muscular (sem diferenciar maiúsculas/acentos). */
+                    grupoMuscular?: string;
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Página de exercícios. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["Exercicio"][];
+                            meta: components["schemas"]["PaginationMeta"];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Criar exercício
+         * @description BE-EXE-01 · Adiciona um exercício à biblioteca do profissional. 409 EXERCICIO_DUPLICADO: já existe um exercício com o mesmo nome na biblioteca (sem diferenciar maiúsculas/acentos).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CriarExercicio"];
+                };
+            };
+            responses: {
+                /** @description Exercício criado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Exercicio"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/exercicios/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Detalhar exercício
+         * @description BE-EXE-01 · 404 NOT_FOUND se não existir, for de outro profissional ou foi excluído.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Exercício. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Exercicio"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /**
+         * Excluir exercício
+         * @description BE-EXE-01 · O exercício sai da biblioteca, mas treinos e execuções que já o usam continuam íntegros (exclusão lógica). 404 NOT_FOUND se não existir ou já foi excluído.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Exercício excluído. */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /**
+         * Editar exercício
+         * @description BE-EXE-01 · Só os campos enviados mudam; null limpa descrição/mídia. 404 NOT_FOUND; 409 EXERCICIO_DUPLICADO: já existe um exercício com o mesmo nome na biblioteca (sem diferenciar maiúsculas/acentos).
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["EditarExercicio"];
+                };
+            };
+            responses: {
+                /** @description Exercício alterado. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Exercicio"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/alunos/{alunoId}/treinos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Listar treinos do aluno
+         * @description BE-TRE-01 · Só os ativos (removidos não aparecem). "q" busca no nome.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Página (começa em 1). */
+                    page?: number;
+                    /** @description Itens por página (máx. 100). */
+                    pageSize?: number;
+                    /** @description Ordenação: nome, -nome, criadoEm, -criadoEm. "-" = decrescente. */
+                    sort?: "nome" | "-nome" | "criadoEm" | "-criadoEm";
+                    /** @description Busca textual. */
+                    q?: string;
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Página de treinos. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["Treino"][];
+                            meta: components["schemas"]["PaginationMeta"];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Montar treino
+         * @description BE-TRE-01 · A ordem dos exercícios é a ordem da lista; cada exercício aparece uma vez. 404 EXERCICIO_NAO_ENCONTRADO: exercício que não está na sua biblioteca; 409 EXERCICIO_EXCLUIDO: exercício excluído da biblioteca (details apontam qual item). 409 ALUNO_INATIVO: reative o aluno antes.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CriarTreino"];
+                };
+            };
+            responses: {
+                /** @description Treino criado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Treino"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/treinos/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Detalhar treino
+         * @description BE-TRE-01 · Exercícios na ordem, com séries, repetições, descanso e carga (o app usa o descanso no timer). 404 NOT_FOUND se não existir, for de aluno de outro profissional ou foi removido.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Treino. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Treino"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /**
+         * Remover treino
+         * @description BE-TRE-01 · O treino sai da lista do aluno, mas os treinos já feitos continuam no histórico (exclusão lógica). 404 NOT_FOUND se não existir ou já foi removido.
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Treino removido. */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /**
+         * Editar treino
+         * @description BE-TRE-01 · Só os campos enviados mudam; "exercicios" substitui a lista inteira. O histórico de treinos feitos não muda. 404 EXERCICIO_NAO_ENCONTRADO: exercício que não está na sua biblioteca; 409 EXERCICIO_EXCLUIDO: exercício excluído da biblioteca (details apontam qual item). 409 ALUNO_INATIVO: reative o aluno antes.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["EditarTreino"];
+                };
+            };
+            responses: {
+                /** @description Treino alterado. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Treino"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/treinos/{id}/duplicar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Duplicar treino
+         * @description BE-TRE-01 · Novo treino com cópia dos exercícios (séries, repetições, descanso e carga), para o mesmo aluno ou outro. Corpo opcional. 409 TREINO_COM_EXERCICIO_EXCLUIDO: troque os exercícios excluídos antes de duplicar. 409 ALUNO_INATIVO: reative o aluno antes.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["DuplicarTreino"];
+                };
+            };
+            responses: {
+                /** @description Cópia criada. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Treino"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/treinos/{treinoId}/execucoes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Finalizar treino (registrar execução)
+         * @description BE-TRE-02 · O app envia tudo ao tocar em "Finalizar treino": início, duração e cada série feita (repetições, carga e descanso). Pode ser enviado depois (offline). Nada é sobrescrito: treinou de novo = nova execução. 400 VALIDATION_ERROR: horário no futuro; 404 EXERCICIO_NAO_ENCONTRADO; 409 EXECUCAO_JA_REGISTRADA: reenvio do mesmo treino (mesmo início), nada foi duplicado (o app pode tratar como enviado); 409 ALUNO_INATIVO: reative o aluno antes.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    treinoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["FinalizarExecucaoTreino"];
+                };
+            };
+            responses: {
+                /** @description Treino registrado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ExecucaoTreino"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/execucoes-treino/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Detalhar treino realizado
+         * @description BE-TRE-02 · Resumo de um treino feito: duração e séries com carga, repetições e descanso.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Treino realizado. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ExecucaoTreino"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/dashboard/alunos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Visão consolidada dos alunos
+         * @description BE-DSH-01 · Frequência de treino de cada aluno no período: treinos, dias treinados, média semanal, último treino e dias sem treinar. Conta só treinos finalizados (BE-TRE-02). Padrão: só alunos ativos (ativo=false para ver os inativos). "q" busca no nome do aluno. Período em dias do horário de Brasília: sem filtro, últimos 30 dias; máximo 366. 400 VALIDATION_ERROR: data inválida, no futuro, "de" depois de "ate" ou período longo demais (details aponta o campo).
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Página (começa em 1). */
+                    page?: number;
+                    /** @description Itens por página (máx. 100). */
+                    pageSize?: number;
+                    /** @description Ordenação: nome, -nome, treinos, -treinos, ultimoTreinoEm, -ultimoTreinoEm. "-" = decrescente. */
+                    sort?: "nome" | "-nome" | "treinos" | "-treinos" | "ultimoTreinoEm" | "-ultimoTreinoEm";
+                    /** @description Busca textual. */
+                    q?: string;
+                    /** @description Desde esta data (inclusive). Sem ela: 30 dias antes de "ate". Sem "de" e "ate": últimos 30 dias. Máximo de 366 dias. */
+                    de?: string;
+                    /** @description Até esta data (inclusive). Sem ela: hoje. Sem "de" e "ate": últimos 30 dias. Máximo de 366 dias. */
+                    ate?: string;
+                    /** @description Situação do aluno (true/false). Padrão: true (só alunos ativos). */
+                    ativo?: "true" | "false";
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Frequência por aluno. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["DashboardAlunos"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Frequência e progressão de carga do aluno
+         * @description BE-DSH-01 · Frequência do aluno com os treinos semana a semana (gráfico de barras) e a progressão de carga por exercício: maior carga de cada dia, carga inicial, atual e variação. Exercícios excluídos da biblioteca continuam aparecendo (ativo=false). Aluno inativo continua consultável. Período em dias do horário de Brasília: sem filtro, últimos 30 dias; máximo 366. 400 VALIDATION_ERROR: data inválida, no futuro, "de" depois de "ate" ou período longo demais (details aponta o campo). 404 NOT_FOUND (aluno).
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Desde esta data (inclusive). Sem ela: 30 dias antes de "ate". Sem "de" e "ate": últimos 30 dias. Máximo de 366 dias. */
+                    de?: string;
+                    /** @description Até esta data (inclusive). Sem ela: hoje. Sem "de" e "ate": últimos 30 dias. Máximo de 366 dias. */
+                    ate?: string;
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Frequência e progressão de carga. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["DashboardAluno"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/planos-nutricionais": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Histórico de planos do aluno
+         * @description BE-NUT-01 · Plano em uso e antigos (mais recente primeiro). "ativo" filtra; "q" busca no nome.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Página (começa em 1). */
+                    page?: number;
+                    /** @description Itens por página (máx. 100). */
+                    pageSize?: number;
+                    /** @description Ordenação: criadoEm, -criadoEm, nome, -nome. "-" = decrescente. */
+                    sort?: "criadoEm" | "-criadoEm" | "nome" | "-nome";
+                    /** @description Busca textual. */
+                    q?: string;
+                    /** @description true = só o plano em uso; false = só os antigos. Sem o filtro: todos. */
+                    ativo?: "true" | "false";
+                };
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Página de planos. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: components["schemas"]["PlanoNutricional"][];
+                            meta: components["schemas"]["PaginationMeta"];
+                        };
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Criar plano nutricional
+         * @description BE-NUT-01 · O novo plano passa a ser o plano em uso; o anterior vai para o histórico (nada é apagado). A ordem das refeições é a ordem da lista. 409 ALUNO_INATIVO: reative o aluno antes.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CriarPlanoNutricional"];
+                };
+            };
+            responses: {
+                /** @description Plano criado. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PlanoNutricional"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/alunos/{alunoId}/planos-nutricionais/ativo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Plano nutricional em uso
+         * @description BE-NUT-01 · O plano que o aluno está seguindo agora. 404 PLANO_NUTRICIONAL_NAO_DEFINIDO: o aluno ainda não tem plano (o front mostra o estado vazio); 404 NOT_FOUND: aluno não encontrado.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    alunoId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Plano em uso. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PlanoNutricional"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/planos-nutricionais/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Detalhar plano nutricional
+         * @description BE-NUT-01 · Qualquer plano do histórico, com as refeições na ordem. 404 NOT_FOUND se não existir ou for de aluno de outro profissional.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Plano. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PlanoNutricional"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /**
+         * Encerrar plano nutricional
+         * @description BE-NUT-01 · O aluno fica sem plano em uso; este continua no histórico (exclusão lógica). 409 PLANO_NUTRICIONAL_INATIVO: o plano já foi substituído ou encerrado (crie um novo).
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Plano encerrado. */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /**
+         * Editar plano nutricional em uso
+         * @description BE-NUT-01 · Só os campos enviados mudam; "refeicoes" substitui a lista inteira; "observacoes": null apaga a observação. 409 PLANO_NUTRICIONAL_INATIVO: o plano já foi substituído ou encerrado (crie um novo). 409 ALUNO_INATIVO: reative o aluno antes.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header: {
+                    /** @description Id do profissional (provisório até o login, BE-AUT-01). */
+                    "x-profissional-id": string;
+                };
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["EditarPlanoNutricional"];
+                };
+            };
+            responses: {
+                /** @description Plano alterado. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["PlanoNutricional"];
+                    };
+                };
+                /** @description Requisição inválida (validação, JSON malformado). */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Não autenticado. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Recurso não encontrado. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Conflito. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Erro interno. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    Aluno: {
-      /** Format: uuid */
-      id: string;
-      nome: string;
-      /** @enum {string} */
-      sexo: 'masculino' | 'feminino';
-      /** Format: date */
-      dataNascimento: string;
-      email: string | null;
-      telefone: string | null;
-      ativo: boolean;
-      /** Format: date-time */
-      criadoEm: string;
-      /** Format: date-time */
-      atualizadoEm: string;
+    schemas: {
+        Aluno: {
+            /** Format: uuid */
+            id: string;
+            nome: string;
+            /** @enum {string} */
+            sexo: "masculino" | "feminino";
+            /** Format: date */
+            dataNascimento: string;
+            email: string | null;
+            telefone: string | null;
+            ativo: boolean;
+            /** Format: date-time */
+            criadoEm: string;
+            /** Format: date-time */
+            atualizadoEm: string;
+        };
+        /** @description Formato único de erro da API. */
+        ErrorResponse: {
+            error: {
+                /** @example VALIDATION_ERROR */
+                code: string;
+                /** @example Dados de entrada inválidos. */
+                message: string;
+                details?: {
+                    /** @example body.email */
+                    field: string;
+                    /** @example Formato de e-mail inválido */
+                    message: string;
+                }[];
+            };
+        };
+        CriarAluno: {
+            /** @example Ana Souza */
+            nome: string;
+            /** @enum {string} */
+            sexo: "masculino" | "feminino";
+            /**
+             * Format: date
+             * @example 2008-05-17
+             */
+            dataNascimento: string;
+            /** @example ana.souza@email.com */
+            email?: string;
+            /** @example (11) 98765-4321 */
+            telefone?: string;
+        };
+        PaginationMeta: {
+            page: number;
+            pageSize: number;
+            totalItems: number;
+            totalPages: number;
+        };
+        AtualizarAluno: {
+            /** @example Ana Souza */
+            nome?: string;
+            /** @enum {string} */
+            sexo?: "masculino" | "feminino";
+            /**
+             * Format: date
+             * @example 2008-05-17
+             */
+            dataNascimento?: string;
+            /** @example ana.souza@email.com */
+            email?: string | null;
+            /** @example (11) 98765-4321 */
+            telefone?: string | null;
+        };
+        PerfilAluno: {
+            /** Format: uuid */
+            id: string;
+            nome: string;
+            /**
+             * @description Define qual modelo de anamnese o aluno recebe.
+             * @enum {string}
+             */
+            sexo: "masculino" | "feminino";
+            /** Format: date */
+            dataNascimento: string;
+            /** @description Anos completos, calculado na hora. */
+            idade: number;
+            contato: {
+                email: string | null;
+                /** @description Só dígitos: DDD + número. */
+                telefone: string | null;
+            };
+            ativo: boolean;
+        };
+        ListaConvites: {
+            data: components["schemas"]["Convite"][];
+        };
+        Convite: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "valido" | "usado" | "revogado" | "expirado";
+            /** Format: date-time */
+            expiraEm: string;
+            /** Format: date-time */
+            usadoEm: string | null;
+            /** Format: date-time */
+            revogadoEm: string | null;
+            /** Format: date-time */
+            criadoEm: string;
+        };
+        ConviteGerado: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "valido" | "usado" | "revogado" | "expirado";
+            /** Format: date-time */
+            expiraEm: string;
+            /** Format: date-time */
+            usadoEm: string | null;
+            /** Format: date-time */
+            revogadoEm: string | null;
+            /** Format: date-time */
+            criadoEm: string;
+            /**
+             * Format: uri
+             * @description Link único para o aluno ativar a conta. Só é mostrado agora: guarde ou envie.
+             * @example http://localhost:8081/convite?token=Q2xhdWRlLUhlYWx0aEZpdEFJLXRva2VuLWV4ZW1wbG8
+             */
+            link: string;
+        };
+        ModeloQuestionario: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            tipo: "anamnese" | "avaliacao" | "feedback";
+            nome: string;
+            /** @enum {string|null} */
+            sexoAlvo: "masculino" | "feminino" | null;
+            /** @description Modelo do sistema: só leitura, pode ser duplicado. */
+            padrao: boolean;
+            ativo: boolean;
+            /** @description Versão atual (BE-QST-04). */
+            versao: number;
+            totalPerguntas: number;
+            /** Format: date-time */
+            criadoEm: string;
+            /** Format: date-time */
+            atualizadoEm: string;
+            perguntas: components["schemas"]["Pergunta"][];
+        };
+        Pergunta: {
+            /** Format: uuid */
+            id: string;
+            ordem: number;
+            /** @enum {string} */
+            tipo: "texto_curto" | "texto_longo" | "escolha_unica" | "multipla_escolha" | "sim_nao" | "numero" | "escala" | "data";
+            enunciado: string;
+            obrigatoria: boolean;
+            exibirEvolucao: boolean;
+            /** @description Só em escolha_unica/multipla_escolha. */
+            opcoes: string[] | null;
+            /** @description Só em numero/escala. */
+            unidade: string | null;
+            /** @description Só em numero/escala. */
+            min: number | null;
+            /** @description Só em numero/escala. */
+            max: number | null;
+        };
+        CriarModeloQuestionario: {
+            /** @enum {string} */
+            tipo: "anamnese" | "avaliacao" | "feedback";
+            /** @example Anamnese inicial */
+            nome: string;
+            /**
+             * @description Para qual sexo o modelo foi feito. null = qualquer aluno.
+             * @default null
+             * @enum {string|null}
+             */
+            sexoAlvo: "masculino" | "feminino" | null;
+            /** @description A ordem no formulário é a posição na lista. */
+            perguntas: components["schemas"]["PerguntaEntrada"][];
+        };
+        PerguntaEntrada: {
+            /** @enum {string} */
+            tipo: "texto_curto";
+            /** @example Qual o seu peso atual? */
+            enunciado: string;
+            /** @default false */
+            obrigatoria: boolean;
+            /**
+             * @default false
+             * @enum {boolean}
+             */
+            exibirEvolucao: false;
+        } | {
+            /** @enum {string} */
+            tipo: "texto_longo";
+            /** @example Qual o seu peso atual? */
+            enunciado: string;
+            /** @default false */
+            obrigatoria: boolean;
+            /**
+             * @default false
+             * @enum {boolean}
+             */
+            exibirEvolucao: false;
+        } | {
+            /** @enum {string} */
+            tipo: "escolha_unica";
+            /** @example Qual o seu peso atual? */
+            enunciado: string;
+            /** @default false */
+            obrigatoria: boolean;
+            /**
+             * @example [
+             *       "Sedentário",
+             *       "Moderado",
+             *       "Intenso"
+             *     ]
+             */
+            opcoes: string[];
+            /**
+             * @default false
+             * @enum {boolean}
+             */
+            exibirEvolucao: false;
+        } | {
+            /** @enum {string} */
+            tipo: "multipla_escolha";
+            /** @example Qual o seu peso atual? */
+            enunciado: string;
+            /** @default false */
+            obrigatoria: boolean;
+            /**
+             * @example [
+             *       "Sedentário",
+             *       "Moderado",
+             *       "Intenso"
+             *     ]
+             */
+            opcoes: string[];
+            /**
+             * @default false
+             * @enum {boolean}
+             */
+            exibirEvolucao: false;
+        } | {
+            /** @enum {string} */
+            tipo: "sim_nao";
+            /** @example Qual o seu peso atual? */
+            enunciado: string;
+            /** @default false */
+            obrigatoria: boolean;
+            /**
+             * @default false
+             * @enum {boolean}
+             */
+            exibirEvolucao: false;
+        } | {
+            /** @enum {string} */
+            tipo: "numero";
+            /** @example Qual o seu peso atual? */
+            enunciado: string;
+            /** @default false */
+            obrigatoria: boolean;
+            /** @example kg */
+            unidade?: string;
+            min?: number;
+            max?: number;
+            /**
+             * @description A resposta vira série no gráfico de evolução (BE-QST-03).
+             * @default false
+             */
+            exibirEvolucao: boolean;
+        } | {
+            /** @enum {string} */
+            tipo: "escala";
+            /** @example Qual o seu peso atual? */
+            enunciado: string;
+            /** @default false */
+            obrigatoria: boolean;
+            /** @example kg */
+            unidade?: string;
+            min: number;
+            max: number;
+            /**
+             * @description A resposta vira série no gráfico de evolução (BE-QST-03).
+             * @default false
+             */
+            exibirEvolucao: boolean;
+        } | {
+            /** @enum {string} */
+            tipo: "data";
+            /** @example Qual o seu peso atual? */
+            enunciado: string;
+            /** @default false */
+            obrigatoria: boolean;
+            /**
+             * @default false
+             * @enum {boolean}
+             */
+            exibirEvolucao: false;
+        };
+        ModeloQuestionarioResumo: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            tipo: "anamnese" | "avaliacao" | "feedback";
+            nome: string;
+            /** @enum {string|null} */
+            sexoAlvo: "masculino" | "feminino" | null;
+            /** @description Modelo do sistema: só leitura, pode ser duplicado. */
+            padrao: boolean;
+            ativo: boolean;
+            /** @description Versão atual (BE-QST-04). */
+            versao: number;
+            totalPerguntas: number;
+            /** Format: date-time */
+            criadoEm: string;
+            /** Format: date-time */
+            atualizadoEm: string;
+        };
+        EditarModeloQuestionario: {
+            /** @description Versão que foi aberta para edição (vem do GET). */
+            versao: number;
+            /** @example Anamnese inicial */
+            nome: string;
+            /**
+             * @description Para qual sexo o modelo foi feito. null = qualquer aluno.
+             * @default null
+             * @enum {string|null}
+             */
+            sexoAlvo: "masculino" | "feminino" | null;
+            /** @description A ordem no formulário é a posição na lista. */
+            perguntas: components["schemas"]["PerguntaEntrada"][];
+        };
+        DuplicarModeloQuestionario: {
+            /** @example Anamnese inicial */
+            nome?: string;
+        };
+        VersaoModeloResumo: {
+            numero: number;
+            totalPerguntas: number;
+            /** Format: date-time */
+            criadoEm: string;
+        };
+        VersaoModelo: {
+            /** Format: uuid */
+            modeloId: string;
+            numero: number;
+            /** Format: date-time */
+            criadoEm: string;
+            perguntas: components["schemas"]["Pergunta"][];
+        };
+        Submissao: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            alunoId: string;
+            modelo: {
+                /** Format: uuid */
+                id: string;
+                nome: string;
+                /** @enum {string} */
+                tipo: "anamnese" | "avaliacao" | "feedback";
+            };
+            /** @description Versão do modelo que foi respondida. */
+            versao: number;
+            /** @enum {string} */
+            status: "rascunho" | "final";
+            /** @enum {string} */
+            preenchidoPor: "aluno" | "profissional";
+            /**
+             * Format: date-time
+             * @description Data da resposta (ou da avaliação). null no rascunho.
+             */
+            respondidoEm: string | null;
+            /** Format: date-time */
+            criadoEm: string;
+            /**
+             * Format: date-time
+             * @description Último autosave, no rascunho.
+             */
+            atualizadoEm: string;
+            perguntas: components["schemas"]["PerguntaRespondida"][];
+        };
+        PerguntaRespondida: {
+            /** Format: uuid */
+            id: string;
+            ordem: number;
+            /** @enum {string} */
+            tipo: "texto_curto" | "texto_longo" | "escolha_unica" | "multipla_escolha" | "sim_nao" | "numero" | "escala" | "data";
+            enunciado: string;
+            obrigatoria: boolean;
+            exibirEvolucao: boolean;
+            /** @description Só em escolha_unica/multipla_escolha. */
+            opcoes: string[] | null;
+            /** @description Só em numero/escala. */
+            unidade: string | null;
+            /** @description Só em numero/escala. */
+            min: number | null;
+            /** @description Só em numero/escala. */
+            max: number | null;
+            /** @description Formato conforme o tipo da pergunta. null apaga a resposta. */
+            valor: string | number | boolean | string[] | null;
+        };
+        AbrirSubmissao: {
+            /** Format: uuid */
+            modeloId: string;
+        };
+        SalvarRascunho: {
+            respostas: {
+                /** Format: uuid */
+                perguntaId: string;
+                /** @description Formato conforme o tipo da pergunta. null apaga a resposta. */
+                valor: string | number | boolean | string[] | null;
+            }[];
+        };
+        FinalizarSubmissao: {
+            respostas?: {
+                /** Format: uuid */
+                perguntaId: string;
+                /** @description Formato conforme o tipo da pergunta. null apaga a resposta. */
+                valor: string | number | boolean | string[] | null;
+            }[];
+            /**
+             * Format: date-time
+             * @description Só em avaliação (BE-RSP-03). Padrão: agora.
+             * @example 2026-11-04T09:30:00-03:00
+             */
+            respondidoEm?: string;
+        };
+        SubmissaoResumo: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            alunoId: string;
+            modelo: {
+                /** Format: uuid */
+                id: string;
+                nome: string;
+                /** @enum {string} */
+                tipo: "anamnese" | "avaliacao" | "feedback";
+            };
+            /** @description Versão do modelo que foi respondida. */
+            versao: number;
+            /** @enum {string} */
+            status: "rascunho" | "final";
+            /** @enum {string} */
+            preenchidoPor: "aluno" | "profissional";
+            /**
+             * Format: date-time
+             * @description Data da resposta (ou da avaliação). null no rascunho.
+             */
+            respondidoEm: string | null;
+            /** Format: date-time */
+            criadoEm: string;
+            /**
+             * Format: date-time
+             * @description Último autosave, no rascunho.
+             */
+            atualizadoEm: string;
+            totalRespostas: number;
+        };
+        AgendamentoFeedback: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            alunoId: string;
+            modelo: {
+                /** Format: uuid */
+                id: string;
+                nome: string;
+            };
+            /** @enum {string} */
+            recorrencia: "semanal" | "quinzenal" | "mensal" | "avulso";
+            /**
+             * Format: date-time
+             * @description Quando sai o próximo feedback.
+             */
+            proximaLiberacao: string;
+            lembreteDias: number | null;
+            ativo: boolean;
+            /** Format: date-time */
+            criadoEm: string;
+            /** Format: date-time */
+            atualizadoEm: string;
+        };
+        CriarAgendamentoFeedback: {
+            /** Format: uuid */
+            modeloId: string;
+            /**
+             * @description avulso = liberado uma vez só.
+             * @enum {string}
+             */
+            recorrencia: "semanal" | "quinzenal" | "mensal" | "avulso";
+            /**
+             * Format: date-time
+             * @description Quando o primeiro feedback é liberado. Não pode estar no passado.
+             * @example 2026-11-09T08:00:00-03:00
+             */
+            primeiraLiberacao: string;
+            /**
+             * @description BE-FBK-03 · Dias sem resposta até o aluno receber o lembrete. null = sem lembrete. Precisa ser menor que o intervalo da recorrência.
+             * @default null
+             */
+            lembreteDias: number | null;
+        };
+        EditarAgendamentoFeedback: {
+            /**
+             * @description avulso = liberado uma vez só.
+             * @enum {string}
+             */
+            recorrencia?: "semanal" | "quinzenal" | "mensal" | "avulso";
+            /**
+             * Format: date-time
+             * @example 2026-11-09T08:00:00-03:00
+             */
+            proximaLiberacao?: string;
+            /** @description BE-FBK-03 · Dias sem resposta até o aluno receber o lembrete. null = sem lembrete. Precisa ser menor que o intervalo da recorrência. */
+            lembreteDias?: number | null;
+        };
+        AtivarAgendamentoFeedback: {
+            /**
+             * Format: date-time
+             * @example 2026-11-09T08:00:00-03:00
+             */
+            proximaLiberacao?: string;
+        };
+        FeedbackResumo: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            agendamentoId: string;
+            /** Format: uuid */
+            alunoId: string;
+            modelo: {
+                /** Format: uuid */
+                id: string;
+                nome: string;
+            };
+            /** @enum {string} */
+            status: "agendado" | "enviado" | "respondido" | "atrasado";
+            /**
+             * Format: uuid
+             * @description Respostas do aluno (GET /alunos/{alunoId}/submissoes/{id}).
+             */
+            submissaoId: string | null;
+            /** Format: date-time */
+            enviadoEm: string | null;
+            /**
+             * Format: date-time
+             * @description BE-FBK-03 · Quando sai o lembrete, se o aluno não responder antes.
+             */
+            lembretePrevistoEm: string | null;
+            /**
+             * Format: date-time
+             * @description Quando o lembrete saiu.
+             */
+            lembreteEm: string | null;
+            /** Format: date-time */
+            respondidoEm: string | null;
+            /** Format: date-time */
+            criadoEm: string;
+            /** Format: date-time */
+            atualizadoEm: string;
+            totalComentarios: number;
+        };
+        Feedback: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            agendamentoId: string;
+            /** Format: uuid */
+            alunoId: string;
+            modelo: {
+                /** Format: uuid */
+                id: string;
+                nome: string;
+            };
+            /** @enum {string} */
+            status: "agendado" | "enviado" | "respondido" | "atrasado";
+            /**
+             * Format: uuid
+             * @description Respostas do aluno (GET /alunos/{alunoId}/submissoes/{id}).
+             */
+            submissaoId: string | null;
+            /** Format: date-time */
+            enviadoEm: string | null;
+            /**
+             * Format: date-time
+             * @description BE-FBK-03 · Quando sai o lembrete, se o aluno não responder antes.
+             */
+            lembretePrevistoEm: string | null;
+            /**
+             * Format: date-time
+             * @description Quando o lembrete saiu.
+             */
+            lembreteEm: string | null;
+            /** Format: date-time */
+            respondidoEm: string | null;
+            /** Format: date-time */
+            criadoEm: string;
+            /** Format: date-time */
+            atualizadoEm: string;
+            comentarios: components["schemas"]["ComentarioFeedback"][];
+        };
+        ComentarioFeedback: {
+            /** Format: uuid */
+            id: string;
+            texto: string;
+            /** Format: date-time */
+            criadoEm: string;
+        };
+        CriarComentarioFeedback: {
+            texto: string;
+        };
+        PoseFoto: {
+            /** Format: uuid */
+            id: string;
+            nome: string;
+            /** @description Ordem em que o app pede as fotos. */
+            ordem: number;
+            ativa: boolean;
+            /** Format: date-time */
+            criadoEm: string;
+            /** Format: date-time */
+            atualizadoEm: string;
+        };
+        CriarPoseFoto: {
+            /** @example Lateral direita */
+            nome: string;
+        };
+        RenomearPoseFoto: {
+            /** @example Lateral direita */
+            nome: string;
+        };
+        ReordenarPosesFoto: {
+            /** @description Todas as poses ativas, na nova ordem. */
+            ids: string[];
+        };
+        EnvioFoto: {
+            /** Format: uuid */
+            envioId: string;
+            /**
+             * Format: uri
+             * @description URL assinada: envie o arquivo nela com PUT.
+             */
+            url: string;
+            /** @enum {string} */
+            metodo: "PUT";
+            /**
+             * @description Headers obrigatórios no PUT (fazem parte da assinatura).
+             * @example {
+             *       "Content-Type": "image/jpeg"
+             *     }
+             */
+            headers: {
+                [key: string]: string;
+            };
+            /**
+             * Format: date-time
+             * @description Depois disso, peça um novo envio.
+             */
+            expiraEm: string;
+            confirmacao: components["schemas"]["ConfirmarEnvioFoto"];
+        };
+        /** @description Envie exatamente o objeto "confirmacao" recebido ao pedir o envio. */
+        ConfirmarEnvioFoto: {
+            /** Format: uuid */
+            envioId: string;
+            /** Format: uuid */
+            poseId: string;
+            /**
+             * Format: date
+             * @example 2026-11-06
+             */
+            dataRegistro: string;
+        };
+        CriarEnvioFoto: {
+            /** Format: uuid */
+            poseId: string;
+            /**
+             * Format: date
+             * @description Dia da foto. Sem o campo, vale hoje (horário de Brasília).
+             * @example 2026-11-06
+             */
+            dataRegistro?: string;
+            /**
+             * @description Content-Type do arquivo que será enviado.
+             * @enum {string}
+             */
+            tipoArquivo: "image/jpeg" | "image/png" | "image/webp";
+            /**
+             * @description Tamanho exato do arquivo, em bytes.
+             * @example 2457600
+             */
+            tamanho: number;
+        };
+        Foto: {
+            /** Format: uuid */
+            id: string;
+            pose: {
+                /** Format: uuid */
+                id: string;
+                nome: string;
+                ordem: number;
+                ativa: boolean;
+            };
+            /** Format: date */
+            dataRegistro: string;
+            /** @description Bytes da foto processada. */
+            tamanho: number;
+            /** @enum {string} */
+            criadoPor: "profissional" | "aluno";
+            /** Format: date-time */
+            criadoEm: string;
+            /**
+             * Format: uri
+             * @description URL assinada da foto (curta duração).
+             */
+            url: string;
+            /**
+             * Format: uri
+             * @description URL assinada da miniatura (galeria). null se não houver.
+             */
+            miniaturaUrl: string | null;
+            /**
+             * Format: date-time
+             * @description Depois disso, busque a lista de novo para novas URLs.
+             */
+            urlsExpiramEm: string;
+        };
+        FotosDoDia: {
+            /** Format: date */
+            dataRegistro: string;
+            /** @description Por ordem da pose. */
+            fotos: components["schemas"]["Foto"][];
+        };
+        ComparacaoFotos: {
+            /** Format: date */
+            antes: string;
+            /** Format: date */
+            depois: string;
+            /** @description Uma linha por pose (na ordem das poses). null = não há foto daquela pose na data. */
+            poses: {
+                pose: {
+                    /** Format: uuid */
+                    id: string;
+                    nome: string;
+                    ordem: number;
+                    ativa: boolean;
+                };
+                antes: components["schemas"]["Foto"] & (Record<string, never> | null);
+                depois: components["schemas"]["Foto"] & (Record<string, never> | null);
+            }[];
+        };
+        TipoMedida: {
+            /** Format: uuid */
+            id: string;
+            nome: string;
+            /** @enum {string} */
+            unidade: "cm" | "mm" | "%" | "kg";
+            ativo: boolean;
+            /** Format: date-time */
+            criadoEm: string;
+            /** Format: date-time */
+            atualizadoEm: string;
+        };
+        CriarTipoMedida: {
+            /** @example Antebraço direito */
+            nome: string;
+            /**
+             * @example cm
+             * @enum {string}
+             */
+            unidade: "cm" | "mm" | "%" | "kg";
+        };
+        /** @description Só os campos enviados são alterados. */
+        EditarTipoMedida: {
+            /** @example Antebraço direito */
+            nome?: string;
+            /**
+             * @example cm
+             * @enum {string}
+             */
+            unidade?: "cm" | "mm" | "%" | "kg";
+        };
+        RegistroPeso: {
+            /** Format: uuid */
+            id: string;
+            /** @example 72.35 */
+            pesoKg: number;
+            /** Format: date */
+            dataRegistro: string;
+            /** @enum {string} */
+            registradoPor: "profissional" | "aluno";
+            /** Format: date-time */
+            criadoEm: string;
+        };
+        RegistrarPeso: {
+            /** @example 72.35 */
+            pesoKg: number;
+            /**
+             * Format: date
+             * @description Dia do registro. Sem o campo, vale hoje (horário de Brasília).
+             */
+            dataRegistro?: string;
+        };
+        RegistroMedida: {
+            /** Format: uuid */
+            id: string;
+            tipo: {
+                /** Format: uuid */
+                id: string;
+                nome: string;
+                /** @enum {string} */
+                unidade: "cm" | "mm" | "%" | "kg";
+                ativo: boolean;
+            };
+            /**
+             * @description Na unidade do tipo.
+             * @example 82.5
+             */
+            valor: number;
+            /** Format: date */
+            dataRegistro: string;
+            /** @enum {string} */
+            registradoPor: "profissional" | "aluno";
+            /** Format: date-time */
+            criadoEm: string;
+        };
+        RegistrarMedidas: {
+            /**
+             * Format: date
+             * @description Dia do registro. Sem o campo, vale hoje (horário de Brasília).
+             */
+            dataRegistro?: string;
+            /** @description Medidas tiradas no mesmo dia, uma por tipo. */
+            medidas: {
+                /** Format: uuid */
+                tipoId: string;
+                /** @example 82.5 */
+                valor: number;
+            }[];
+        };
+        Evolucao: {
+            periodo: {
+                /** Format: date */
+                de: string | null;
+                /** Format: date */
+                ate: string | null;
+            };
+            peso: components["schemas"]["SerieEvolucaoPeso"];
+            /** @description Só tipos com registro no período, por nome. */
+            medidas: components["schemas"]["SerieEvolucaoMedida"][];
+            /** @description Só perguntas com resposta no período, por modelo e enunciado. */
+            perguntas: components["schemas"]["SerieEvolucaoPergunta"][];
+        };
+        SerieEvolucaoPeso: {
+            /** @enum {string} */
+            unidade: "kg";
+            /** @description Vazio se não houver pesagens no período. */
+            pontos: components["schemas"]["PontoEvolucao"][];
+        };
+        PontoEvolucao: {
+            /**
+             * Format: date
+             * @description Dia do valor (AAAA-MM-DD, horário de Brasília).
+             */
+            data: string;
+            /** @example 72.35 */
+            valor: number;
+        };
+        SerieEvolucaoMedida: {
+            tipo: {
+                /** Format: uuid */
+                id: string;
+                nome: string;
+                /** @enum {string} */
+                unidade: "cm" | "mm" | "%" | "kg";
+                ativo: boolean;
+            };
+            pontos: components["schemas"]["PontoEvolucao"][];
+        };
+        SerieEvolucaoPergunta: {
+            /**
+             * Format: uuid
+             * @description Id da pergunta na versão mais recente respondida. Use como chave da curva no front.
+             */
+            perguntaId: string;
+            modelo: {
+                /** Format: uuid */
+                id: string;
+                nome: string;
+                /** @enum {string} */
+                tipo: "anamnese" | "avaliacao" | "feedback";
+            };
+            enunciado: string;
+            /** @enum {string} */
+            tipo: "numero" | "escala";
+            unidade: string | null;
+            /** @description Ajuda a fixar o eixo Y (escala). */
+            min: number | null;
+            max: number | null;
+            pontos: components["schemas"]["PontoEvolucaoPergunta"][];
+        };
+        PontoEvolucaoPergunta: {
+            /**
+             * Format: date
+             * @description Dia do valor (AAAA-MM-DD, horário de Brasília).
+             */
+            data: string;
+            /** @example 72.35 */
+            valor: number;
+            /**
+             * Format: uuid
+             * @description Questionário respondido de onde veio o valor.
+             */
+            submissaoId: string;
+        };
+        Exercicio: {
+            /** Format: uuid */
+            id: string;
+            nome: string;
+            grupoMuscular: string;
+            descricao: string | null;
+            midiaUrl: string | null;
+            /** Format: date-time */
+            criadoEm: string;
+            /** Format: date-time */
+            atualizadoEm: string;
+        };
+        CriarExercicio: {
+            /** @example Agachamento livre */
+            nome: string;
+            /** @example Pernas */
+            grupoMuscular: string;
+            /**
+             * @description Opcional. Envie null (ou "") para deixar sem descrição.
+             * @example Pés na largura dos ombros, desça até a coxa ficar paralela ao chão.
+             */
+            descricao?: string | null;
+            /**
+             * @description Opcional. Envie null (ou "") para remover o link.
+             * @example https://www.youtube.com/watch?v=exemplo
+             */
+            midiaUrl?: string | null;
+        };
+        /** @description Só os campos enviados são alterados. */
+        EditarExercicio: {
+            /** @example Agachamento livre */
+            nome?: string;
+            /** @example Pernas */
+            grupoMuscular?: string;
+            /**
+             * @description Opcional. Envie null (ou "") para deixar sem descrição.
+             * @example Pés na largura dos ombros, desça até a coxa ficar paralela ao chão.
+             */
+            descricao?: string | null;
+            /**
+             * @description Opcional. Envie null (ou "") para remover o link.
+             * @example https://www.youtube.com/watch?v=exemplo
+             */
+            midiaUrl?: string | null;
+        };
+        Treino: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            alunoId: string;
+            nome: string;
+            exercicios: {
+                /** Format: uuid */
+                id: string;
+                ordem: number;
+                exercicio: components["schemas"]["ExercicioResumo"];
+                series: number;
+                repeticoes: string;
+                descansoSegundos: number;
+                cargaKg: number | null;
+            }[];
+            /** Format: date-time */
+            criadoEm: string;
+            /** Format: date-time */
+            atualizadoEm: string;
+        };
+        ExercicioResumo: {
+            /** Format: uuid */
+            id: string;
+            nome: string;
+            grupoMuscular: string;
+            /** @description false = excluído da biblioteca depois. */
+            ativo: boolean;
+        };
+        CriarTreino: {
+            /** @example Treino A · Pernas */
+            nome: string;
+            /** @description Na ordem em que devem ser feitos. */
+            exercicios: components["schemas"]["ItemTreinoEntrada"][];
+        };
+        ItemTreinoEntrada: {
+            /**
+             * Format: uuid
+             * @description Exercício da biblioteca (BE-EXE-01).
+             */
+            exercicioId: string;
+            /** @example 4 */
+            series: number;
+            /** @example 8-12 */
+            repeticoes: string;
+            /**
+             * @description Descanso entre as séries, em segundos. 0 = sem descanso.
+             * @example 90
+             */
+            descansoSegundos: number;
+            /**
+             * @description Opcional. null = sem carga (ex.: peso do corpo).
+             * @example 40
+             */
+            cargaKg?: number | null;
+        };
+        /** @description Só os campos enviados mudam. "exercicios" substitui a lista inteira. */
+        EditarTreino: {
+            /** @example Treino A · Pernas */
+            nome?: string;
+            /** @description Na ordem em que devem ser feitos. */
+            exercicios?: components["schemas"]["ItemTreinoEntrada"][];
+        };
+        DuplicarTreino: {
+            /**
+             * @description Sem o campo: "<nome original> (cópia)".
+             * @example Treino A · Pernas
+             */
+            nome?: string;
+            /**
+             * Format: uuid
+             * @description Copiar para outro aluno. Sem o campo: o mesmo aluno.
+             */
+            alunoId?: string;
+        };
+        ExecucaoTreino: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            alunoId: string;
+            /** Format: uuid */
+            treinoId: string;
+            /** Format: date-time */
+            iniciadoEm: string;
+            /**
+             * Format: date-time
+             * @description iniciadoEm + duracaoSegundos.
+             */
+            finalizadoEm: string;
+            duracaoSegundos: number;
+            series: {
+                /** Format: uuid */
+                id: string;
+                exercicio: components["schemas"]["ExercicioResumo"];
+                serie: number;
+                repeticoes: number;
+                cargaKg: number | null;
+                descansoSegundos: number | null;
+            }[];
+            /** Format: date-time */
+            criadoEm: string;
+        };
+        FinalizarExecucaoTreino: {
+            /**
+             * Format: date-time
+             * @description Quando o aluno começou o treino.
+             * @example 2026-11-11T07:30:00-03:00
+             */
+            iniciadoEm: string;
+            /**
+             * @description Tempo total do treino (timer do app), em segundos.
+             * @example 3600
+             */
+            duracaoSegundos: number;
+            series: {
+                /**
+                 * Format: uuid
+                 * @description Exercício da biblioteca (BE-EXE-01).
+                 */
+                exercicioId: string;
+                /**
+                 * @description Nº da série deste exercício: 1, 2, 3...
+                 * @example 1
+                 */
+                serie: number;
+                /**
+                 * @description Repetições feitas de verdade.
+                 * @example 10
+                 */
+                repeticoes: number;
+                /**
+                 * @description Opcional. null = sem carga (ex.: peso do corpo).
+                 * @example 40
+                 */
+                cargaKg?: number | null;
+                /**
+                 * @description Descanso feito DEPOIS desta série. null/ausente = não medido.
+                 * @example 85
+                 */
+                descansoSegundos?: number | null;
+            }[];
+        };
+        DashboardAlunos: {
+            data: components["schemas"]["DashboardAlunoItem"][];
+            meta: components["schemas"]["PaginationMeta"];
+            periodo: components["schemas"]["DashboardPeriodo"];
+        };
+        DashboardAlunoItem: {
+            aluno: components["schemas"]["DashboardAlunoResumo"];
+            frequencia: components["schemas"]["DashboardFrequencia"];
+        };
+        DashboardAlunoResumo: {
+            /** Format: uuid */
+            id: string;
+            nome: string;
+            ativo: boolean;
+        };
+        DashboardFrequencia: {
+            /**
+             * @description Treinos finalizados no período.
+             * @example 12
+             */
+            treinos: number;
+            /**
+             * @description Dias distintos com treino no período (2 treinos no mesmo dia = 1 dia).
+             * @example 11
+             */
+            diasTreinados: number;
+            /**
+             * @description Treinos por semana no período (1 casa decimal).
+             * @example 2.8
+             */
+            mediaSemanal: number;
+            /**
+             * Format: date-time
+             * @description Início do último treino, em qualquer data (não depende do período). Nulo = nunca treinou.
+             */
+            ultimoTreinoEm: string | null;
+            /**
+             * @description Dias desde o último treino até hoje (0 = treinou hoje). Nulo = nunca treinou.
+             * @example 2
+             */
+            diasSemTreinar: number | null;
+        };
+        /** @description Período usado, já com os padrões aplicados. */
+        DashboardPeriodo: {
+            /** Format: date */
+            de: string;
+            /** Format: date */
+            ate: string;
+            /**
+             * @description Quantidade de dias do período.
+             * @example 30
+             */
+            dias: number;
+        };
+        DashboardAluno: {
+            periodo: components["schemas"]["DashboardPeriodo"];
+            aluno: components["schemas"]["DashboardAlunoResumo"];
+            frequencia: {
+                /**
+                 * @description Treinos finalizados no período.
+                 * @example 12
+                 */
+                treinos: number;
+                /**
+                 * @description Dias distintos com treino no período (2 treinos no mesmo dia = 1 dia).
+                 * @example 11
+                 */
+                diasTreinados: number;
+                /**
+                 * @description Treinos por semana no período (1 casa decimal).
+                 * @example 2.8
+                 */
+                mediaSemanal: number;
+                /**
+                 * Format: date-time
+                 * @description Início do último treino, em qualquer data (não depende do período). Nulo = nunca treinou.
+                 */
+                ultimoTreinoEm: string | null;
+                /**
+                 * @description Dias desde o último treino até hoje (0 = treinou hoje). Nulo = nunca treinou.
+                 * @example 2
+                 */
+                diasSemTreinar: number | null;
+                /** @description Treinos por semana, todas as semanas do período (inclusive com 0). */
+                semanas: components["schemas"]["DashboardSemana"][];
+            };
+            /** @description Uma entrada por exercício com carga registrada no período, por nome. Séries sem carga não entram. */
+            progressaoCarga: components["schemas"]["DashboardProgressaoCarga"][];
+        };
+        DashboardSemana: {
+            /**
+             * Format: date
+             * @description Segunda-feira (ou o início do período).
+             */
+            inicio: string;
+            /**
+             * Format: date
+             * @description Domingo (ou o fim do período).
+             */
+            fim: string;
+            treinos: number;
+        };
+        DashboardProgressaoCarga: {
+            exercicio: {
+                /** Format: uuid */
+                id: string;
+                nome: string;
+                grupoMuscular: string;
+                /** @description false = excluído da biblioteca depois. */
+                ativo: boolean;
+            };
+            /** @description Um ponto por dia com carga, em ordem de data crescente. */
+            pontos: {
+                /**
+                 * Format: date
+                 * @description Dia do treino (horário de Brasília).
+                 */
+                data: string;
+                /**
+                 * @description Maior carga do dia.
+                 * @example 40
+                 */
+                cargaMaximaKg: number;
+            }[];
+            /**
+             * @description Primeiro ponto do período.
+             * @example 30
+             */
+            cargaInicialKg: number;
+            /**
+             * @description Último ponto do período.
+             * @example 40
+             */
+            cargaAtualKg: number;
+            /**
+             * @description Atual − inicial.
+             * @example 10
+             */
+            variacaoKg: number;
+            /**
+             * @description (Atual − inicial) / inicial × 100, 1 casa decimal. Nulo se a carga inicial for 0.
+             * @example 33.3
+             */
+            variacaoPercentual: number | null;
+        };
+        PlanoNutricional: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            alunoId: string;
+            nome: string;
+            observacoes: string | null;
+            /** @description true = plano em uso. false = substituído ou encerrado. */
+            ativo: boolean;
+            refeicoes: {
+                /** Format: uuid */
+                id: string;
+                ordem: number;
+                refeicao: string;
+                /** @example 07:30 */
+                horario: string | null;
+                descricao: string;
+            }[];
+            /** Format: date-time */
+            criadoEm: string;
+            /** Format: date-time */
+            atualizadoEm: string;
+        };
+        CriarPlanoNutricional: {
+            /** @example Plano cutting · nov/26 */
+            nome: string;
+            /**
+             * @description Opcional. Vazio ou null = sem observação.
+             * @example Beber 3 L de água por dia. Evitar frituras.
+             */
+            observacoes?: string | null;
+            /** @description Na ordem do dia (a posição na lista é a ordem). */
+            refeicoes: components["schemas"]["RefeicaoPlanoEntrada"][];
+        };
+        RefeicaoPlanoEntrada: {
+            /** @example Café da manhã */
+            refeicao: string;
+            /**
+             * @description Horário sugerido. Opcional (null = sem horário).
+             * @example 07:30
+             */
+            horario?: string | null;
+            /**
+             * @description Alimentos e quantidades, em texto livre.
+             * @example 2 ovos mexidos, 1 pão integral e 1 fruta
+             */
+            descricao: string;
+        };
+        /** @description Só os campos enviados mudam. "refeicoes" substitui a lista inteira. */
+        EditarPlanoNutricional: {
+            /** @example Plano cutting · nov/26 */
+            nome?: string;
+            /**
+             * @description Opcional. Vazio ou null = sem observação.
+             * @example Beber 3 L de água por dia. Evitar frituras.
+             */
+            observacoes?: string | null;
+            /** @description Na ordem do dia (a posição na lista é a ordem). */
+            refeicoes?: components["schemas"]["RefeicaoPlanoEntrada"][];
+        };
     };
-    /** @description Formato único de erro da API. */
-    ErrorResponse: {
-      error: {
-        /** @example VALIDATION_ERROR */
-        code: string;
-        /** @example Dados de entrada inválidos. */
-        message: string;
-        details?: {
-          /** @example body.email */
-          field: string;
-          /** @example Formato de e-mail inválido */
-          message: string;
-        }[];
-      };
-    };
-    CriarAluno: {
-      /** @example Ana Souza */
-      nome: string;
-      /** @enum {string} */
-      sexo: 'masculino' | 'feminino';
-      /**
-       * Format: date
-       * @example 2008-05-17
-       */
-      dataNascimento: string;
-      /** @example ana.souza@email.com */
-      email?: string;
-      /** @example (11) 98765-4321 */
-      telefone?: string;
-    };
-    PaginationMeta: {
-      page: number;
-      pageSize: number;
-      totalItems: number;
-      totalPages: number;
-    };
-    AtualizarAluno: {
-      /** @example Ana Souza */
-      nome?: string;
-      /** @enum {string} */
-      sexo?: 'masculino' | 'feminino';
-      /**
-       * Format: date
-       * @example 2008-05-17
-       */
-      dataNascimento?: string;
-      /** @example ana.souza@email.com */
-      email?: string | null;
-      /** @example (11) 98765-4321 */
-      telefone?: string | null;
-    };
-    PerfilAluno: {
-      /** Format: uuid */
-      id: string;
-      nome: string;
-      /**
-       * @description Define qual modelo de anamnese o aluno recebe.
-       * @enum {string}
-       */
-      sexo: 'masculino' | 'feminino';
-      /** Format: date */
-      dataNascimento: string;
-      /** @description Anos completos, calculado na hora. */
-      idade: number;
-      contato: {
-        email: string | null;
-        /** @description Só dígitos: DDD + número. */
-        telefone: string | null;
-      };
-      ativo: boolean;
-    };
-    ListaConvites: {
-      data: components['schemas']['Convite'][];
-    };
-    Convite: {
-      /** Format: uuid */
-      id: string;
-      /** @enum {string} */
-      status: 'valido' | 'usado' | 'revogado' | 'expirado';
-      /** Format: date-time */
-      expiraEm: string;
-      /** Format: date-time */
-      usadoEm: string | null;
-      /** Format: date-time */
-      revogadoEm: string | null;
-      /** Format: date-time */
-      criadoEm: string;
-    };
-    ConviteGerado: {
-      /** Format: uuid */
-      id: string;
-      /** @enum {string} */
-      status: 'valido' | 'usado' | 'revogado' | 'expirado';
-      /** Format: date-time */
-      expiraEm: string;
-      /** Format: date-time */
-      usadoEm: string | null;
-      /** Format: date-time */
-      revogadoEm: string | null;
-      /** Format: date-time */
-      criadoEm: string;
-      /**
-       * Format: uri
-       * @description Link único para o aluno ativar a conta. Só é mostrado agora: guarde ou envie.
-       * @example http://localhost:8081/convite?token=Q2xhdWRlLUhlYWx0aEZpdEFJLXRva2VuLWV4ZW1wbG8
-       */
-      link: string;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;

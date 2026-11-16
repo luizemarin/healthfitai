@@ -9,6 +9,11 @@ import { StatusBadge } from './status-badge';
 import { ConfirmDialog } from '../../components/feedback/confirm-dialog';
 import { useToast } from '../../components/feedback/toast';
 import { AsyncContent, EmptyState, useAsync } from '../../components/states';
+import { AvaliacoesHistorico } from '../avaliacoes/avaliacoes-historico';
+import { FeedbacksPainel } from '../feedbacks/feedbacks-painel';
+import { FotosPainel } from '../fotos/fotos-painel';
+import { AnamneseRespondida } from '../questionarios/anamnese-respondida';
+import { TreinosPainel } from '../treinos/treinos-painel';
 
 import type { KeyboardEvent, ReactElement } from 'react';
 
@@ -16,8 +21,8 @@ import type { PerfilAluno } from './alunos-api';
 
 /**
  * Abas da ficha. O conteúdo de cada uma chega com o requisito dela:
- *   anamnese → FE-QST-03 · avaliacoes → FE-AVA-01/02 · feedbacks → FE-FBK-03
- *   fotos → FE-FOT-02/03 · medidas → FE-EVO-02 · evolucao → FE-EVO-01
+ *   anamnese → FE-QST-03 · avaliacoes → FE-AVA-01/02 · feedbacks → FE-FBK-01/02/03
+ *   fotos → FE-FOT-02/03 · medidas → FE-EVO-02 · evolucao → FE-EVO-01 · treinos → FE-TRE-01
  */
 const ABAS = [
   {
@@ -34,6 +39,7 @@ const ABAS = [
     vazio: 'Os registros de peso e medidas aparecem aqui.',
   },
   { id: 'evolucao', label: 'Evolução', vazio: 'Os gráficos de evolução aparecem aqui.' },
+  { id: 'treinos', label: 'Treinos', vazio: 'Os treinos do aluno aparecem aqui.' },
 ] as const;
 
 type AbaId = (typeof ABAS)[number]['id'];
@@ -54,7 +60,7 @@ export function AlunoFichaPage(): ReactElement {
           <div className="grid grid-cols-[minmax(0,1fr)] gap-lg">
             <Cabecalho perfil={dados} onAlterado={perfil.reload} />
             <ConviteCard alunoId={dados.id} alunoAtivo={dados.ativo} />
-            <Abas />
+            <Abas alunoId={dados.id} />
           </div>
         )}
       </AsyncContent>
@@ -142,7 +148,7 @@ function Cabecalho({
 }
 
 /** Abas acessíveis (setas ← → trocam de aba). A aba aberta fica na URL (?aba=fotos). */
-function Abas(): ReactElement {
+function Abas({ alunoId }: { alunoId: string }): ReactElement {
   const [params, setParams] = useSearchParams();
   const tabsRef = useRef<HTMLDivElement>(null);
   const atual: AbaId = ABAS.find((aba) => aba.id === params.get('aba'))?.id ?? 'anamnese';
@@ -200,8 +206,24 @@ function Abas(): ReactElement {
         aria-labelledby={`aba-${abaAtual.id}`}
         className="pt-md"
       >
-        <EmptyState title={`${abaAtual.label}: nada por aqui ainda`} description={abaAtual.vazio} />
+        <ConteudoDaAba aba={abaAtual} alunoId={alunoId} />
       </div>
     </section>
   );
+}
+
+/** O que cada aba mostra; abas sem requisito implementado ainda mostram o aviso de vazio. */
+function ConteudoDaAba({
+  aba,
+  alunoId,
+}: {
+  aba: (typeof ABAS)[number];
+  alunoId: string;
+}): ReactElement {
+  if (aba.id === 'anamnese') return <AnamneseRespondida alunoId={alunoId} />;
+  if (aba.id === 'avaliacoes') return <AvaliacoesHistorico alunoId={alunoId} />;
+  if (aba.id === 'feedbacks') return <FeedbacksPainel alunoId={alunoId} />;
+  if (aba.id === 'fotos') return <FotosPainel alunoId={alunoId} />;
+  if (aba.id === 'treinos') return <TreinosPainel alunoId={alunoId} />;
+  return <EmptyState title={`${aba.label}: nada por aqui ainda`} description={aba.vazio} />;
 }
