@@ -34,9 +34,9 @@ export function getProfissionalId(request: Request): string {
 
   const result = profissionalIdSchema.safeParse(value);
   if (!result.success) {
-    throw AppError.validation([
-      { field: `headers.${PROFISSIONAL_HEADER}`, message: 'Deve ser um UUID válido.' },
-    ]);
+    throw AppError.unauthorized(
+      'Profissional não identificado. O header X-Profissional-Id deve ser um UUID válido.',
+    );
   }
 
   return result.data;

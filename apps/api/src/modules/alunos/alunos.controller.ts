@@ -105,7 +105,7 @@ export class AlunosController {
 
     const aluno = await this.service.desativar(profissionalId, params.id);
 
-    response.json(toResponse(aluno));
+    response.status(201).json(toResponse(aluno));
   };
 
   ativar: RequestHandler = async (request, response) => {
@@ -114,6 +114,6 @@ export class AlunosController {
 
     const aluno = await this.service.ativar(profissionalId, params.id);
 
-    response.json(toResponse(aluno));
+    response.status(201).json(toResponse(aluno));
   };
 }

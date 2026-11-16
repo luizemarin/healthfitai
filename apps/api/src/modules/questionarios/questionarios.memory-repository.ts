@@ -1,7 +1,9 @@
 import { randomUUID } from 'node:crypto';
 
+import { MODELOS_PADRAO } from './questionarios.padroes';
 import { VersaoDesatualizadaError } from './questionarios.repository';
 
+import type { ModeloPadrao } from './questionarios.padroes';
 import type {
   EdicaoModelo,
   FiltrosListagemModelos,
@@ -11,6 +13,7 @@ import type {
   PaginaModelos,
   QuestionariosRepository,
   ResumoVersao,
+  TipoModelo,
   VersaoModelo,
 } from './questionarios.repository';
 
@@ -42,12 +45,33 @@ function novaVersao(
  * Implementação em memória, PROVISÓRIA até as tabelas no banco.
  * Os dados somem ao reiniciar a API. Imita o banco: gera os UUIDs (o Postgres
  * fará isso com gen_random_uuid()) e nunca altera uma versão já criada.
+ *
+ * BE-QST-05/06 · Já nasce com os modelos padrão (anamnese M/F e avaliação
+ * postural), como o banco depois do seed. Nos testes dá para passar outra lista.
  */
 export class InMemoryQuestionariosRepository implements QuestionariosRepository {
   private readonly modelos = new Map<string, ModeloGuardado>();
 
   /** modeloId → versões em ordem (índice 0 = versão 1). */
   private readonly versoes = new Map<string, VersaoModelo[]>();
+
+  constructor(padroes: readonly ModeloPadrao[] = MODELOS_PADRAO) {
+    const agora = new Date();
+    padroes.forEach((padrao) => {
+      this.modelos.set(padrao.id, {
+        id: padrao.id,
+        profissionalId: null,
+        tipo: padrao.tipo,
+        nome: padrao.nome,
+        sexoAlvo: padrao.sexoAlvo,
+        versao: 1,
+        ativo: true,
+        criadoEm: agora,
+        atualizadoEm: agora,
+      });
+      this.versoes.set(padrao.id, [novaVersao(padrao.id, 1, padrao.perguntas, agora)]);
+    });
+  }
 
   async create(dados: NovoModelo): Promise<ModeloQuestionario> {
     const agora = new Date();
@@ -154,6 +178,12 @@ export class InMemoryQuestionariosRepository implements QuestionariosRepository 
     this.modelos.set(id, atualizado);
 
     return this.montar(atualizado);
+  }
+
+  async listAtivosPorTipo(profissionalId: string, tipo: TipoModelo): Promise<ModeloQuestionario[]> {
+    return [...this.modelos.values()]
+      .filter((modelo) => visivel(modelo, profissionalId) && modelo.ativo && modelo.tipo === tipo)
+      .map((modelo) => this.montar(modelo));
   }
 
   async listVersoes(modeloId: string): Promise<ResumoVersao[]> {

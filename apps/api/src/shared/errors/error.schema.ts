@@ -30,6 +30,7 @@ const ERROR_DESCRIPTIONS = {
   409: 'Conflito.',
   413: 'Payload muito grande.',
   500: 'Erro interno.',
+  503: 'Serviço externo indisponível ou não configurado (ex.: storage de fotos).',
 } as const;
 
 type ErrorStatus = keyof typeof ERROR_DESCRIPTIONS;

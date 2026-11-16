@@ -32,7 +32,7 @@ const MAX_PERGUNTAS = 100;
 const MIN_OPCOES = 2;
 const MAX_OPCOES = 30;
 /** Limite de DECIMAL(10,2) no banco: 8 dígitos inteiros + 2 casas. */
-const LIMITE_NUMERICO = 99_999_999.99;
+export const LIMITE_NUMERICO = 99_999_999.99;
 
 const MENSAGEM_EVOLUCAO =
   'Só perguntas do tipo "numero" ou "escala" podem aparecer no gráfico de evolução.';
@@ -229,6 +229,11 @@ function erroCorpo(issue: z.core.$ZodRawIssue): string | undefined {
 
 export const modeloIdParamsSchema = z.object({
   id: z.uuid({ error: 'O id do modelo deve ser um UUID válido.' }),
+});
+
+/** BE-QST-05 · Rota da anamnese do aluno. */
+export const alunoAnamneseParamsSchema = z.object({
+  alunoId: z.uuid({ error: 'O id do aluno deve ser um UUID válido.' }),
 });
 
 export const versaoParamsSchema = modeloIdParamsSchema.extend({

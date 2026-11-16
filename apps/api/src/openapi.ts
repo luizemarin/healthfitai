@@ -2,7 +2,16 @@ import { OpenApiGeneratorV31, OpenAPIRegistry } from '@asteasolutions/zod-to-ope
 
 import { registerAlunosOpenApi } from './modules/alunos/alunos.openapi';
 import { registerConvitesOpenApi } from './modules/convites/convites.openapi';
+import { registerDashboardOpenApi } from './modules/dashboard/dashboard.openapi';
+import { registerEvolucaoOpenApi } from './modules/evolucao/evolucao.openapi';
+import { registerExerciciosOpenApi } from './modules/exercicios/exercicios.openapi';
+import { registerFeedbacksOpenApi } from './modules/feedbacks/feedbacks.openapi';
+import { registerFotosOpenApi } from './modules/fotos/fotos.openapi';
+import { registerMedidasOpenApi } from './modules/medidas/medidas.openapi';
+import { registerNutricaoOpenApi } from './modules/nutricao/nutricao.openapi';
 import { registerQuestionariosOpenApi } from './modules/questionarios/questionarios.openapi';
+import { registerRespostasOpenApi } from './modules/respostas/respostas.openapi';
+import { registerTreinosOpenApi } from './modules/treinos/treinos.openapi';
 
 export type OpenApiDocument = ReturnType<OpenApiGeneratorV31['generateDocument']>;
 
@@ -21,6 +30,15 @@ const registrations: readonly OpenApiRegistration[] = [
   registerAlunosOpenApi,
   registerConvitesOpenApi,
   registerQuestionariosOpenApi,
+  registerRespostasOpenApi,
+  registerFeedbacksOpenApi,
+  registerFotosOpenApi,
+  registerMedidasOpenApi,
+  registerEvolucaoOpenApi,
+  registerExerciciosOpenApi,
+  registerTreinosOpenApi,
+  registerDashboardOpenApi,
+  registerNutricaoOpenApi,
 ];
 
 export function createOpenApiDocument(): OpenApiDocument {

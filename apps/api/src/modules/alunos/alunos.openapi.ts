@@ -101,7 +101,7 @@ export function registerAlunosOpenApi(registry: OpenAPIRegistry): void {
       '409 se o aluno já estiver inativo (ALUNO_JA_INATIVO).',
     request: { headers: profissionalHeaderSchema, params: alunoIdParamsSchema },
     responses: {
-      200: { description: 'Aluno desativado.', content: json(alunoResponseSchema) },
+      201: { description: 'Aluno desativado.', content: json(alunoResponseSchema) },
       ...errorResponses(400, 401, 404, 409),
     },
   });
@@ -114,7 +114,7 @@ export function registerAlunosOpenApi(registry: OpenAPIRegistry): void {
     description: 'Reativa um aluno inativo. 409 se o aluno já estiver ativo (ALUNO_JA_ATIVO).',
     request: { headers: profissionalHeaderSchema, params: alunoIdParamsSchema },
     responses: {
-      200: { description: 'Aluno ativado.', content: json(alunoResponseSchema) },
+      201: { description: 'Aluno ativado.', content: json(alunoResponseSchema) },
       ...errorResponses(400, 401, 404, 409),
     },
   });

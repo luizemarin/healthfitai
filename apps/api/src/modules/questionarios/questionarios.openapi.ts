@@ -1,4 +1,5 @@
 import {
+  alunoAnamneseParamsSchema,
   criarModeloBodySchema,
   duplicarModeloBodySchema,
   editarModeloBodySchema,
@@ -27,7 +28,7 @@ const REGRAS_PERGUNTAS =
   'obrigatórios) e data. "exibirEvolucao" (BE-QST-03) só é aceito em numero e escala. ' +
   'A ordem das perguntas é a posição na lista.';
 
-/** Contrato das rotas de modelos de questionário (BE-QST-01 a BE-QST-04). */
+/** Contrato das rotas de modelos de questionário (BE-QST-01 a BE-QST-06). */
 export function registerQuestionariosOpenApi(registry: OpenAPIRegistry): void {
   registry.registerPath({
     method: 'post',
@@ -51,7 +52,8 @@ export function registerQuestionariosOpenApi(registry: OpenAPIRegistry): void {
     tags: TAGS,
     summary: 'Listar modelos de questionário',
     description:
-      'Modelos do profissional + modelos padrão do sistema (padrao = true). ' +
+      'Modelos do profissional + modelos padrão do sistema (padrao = true): ' +
+      'anamnese masculina, anamnese feminina e avaliação postural (BE-QST-05/06). ' +
       'Busca por nome (q), filtros por tipo e situação, paginação e ordenação.',
     request: { headers: profissionalHeaderSchema, query: listarModelosQuerySchema },
     responses: {
@@ -124,7 +126,7 @@ export function registerQuestionariosOpenApi(registry: OpenAPIRegistry): void {
       '409 MODELO_JA_INATIVO; 403 MODELO_PADRAO_SOMENTE_LEITURA.',
     request: { headers: profissionalHeaderSchema, params: modeloIdParamsSchema },
     responses: {
-      200: { description: 'Modelo desativado.', content: json(modeloResponseSchema) },
+      201: { description: 'Modelo desativado.', content: json(modeloResponseSchema) },
       ...errorResponses(400, 401, 403, 404, 409),
     },
   });
@@ -137,7 +139,7 @@ export function registerQuestionariosOpenApi(registry: OpenAPIRegistry): void {
     description: '409 MODELO_JA_ATIVO; 403 MODELO_PADRAO_SOMENTE_LEITURA.',
     request: { headers: profissionalHeaderSchema, params: modeloIdParamsSchema },
     responses: {
-      200: { description: 'Modelo ativado.', content: json(modeloResponseSchema) },
+      201: { description: 'Modelo ativado.', content: json(modeloResponseSchema) },
       ...errorResponses(400, 401, 403, 404, 409),
     },
   });
@@ -165,6 +167,25 @@ export function registerQuestionariosOpenApi(registry: OpenAPIRegistry): void {
     responses: {
       200: { description: 'Versão.', content: json(versaoResponseSchema) },
       ...errorResponses(400, 401, 404),
+    },
+  });
+
+  registry.registerPath({
+    method: 'get',
+    path: '/alunos/{alunoId}/anamnese/modelo',
+    tags: TAGS,
+    summary: 'Modelo de anamnese do aluno',
+    description:
+      'BE-QST-05 · Escolhe o modelo de anamnese pelo sexo do aluno, nesta ordem: ' +
+      '1) do profissional para o sexo do aluno; 2) do profissional para qualquer sexo; ' +
+      '3) padrão do sistema para o sexo do aluno; 4) padrão para qualquer sexo. ' +
+      'Só modelos ativos; empate fica com o editado mais recentemente. ' +
+      '404 NOT_FOUND se o aluno não existe; 409 ALUNO_INATIVO; ' +
+      '404 ANAMNESE_NAO_DISPONIVEL se nenhum modelo ativo serve.',
+    request: { headers: profissionalHeaderSchema, params: alunoAnamneseParamsSchema },
+    responses: {
+      200: { description: 'Modelo escolhido.', content: json(modeloResponseSchema) },
+      ...errorResponses(400, 401, 404, 409),
     },
   });
 }
