@@ -48,6 +48,7 @@ export default [
     rules: {
       // Named exports facilitam refactor e busca; default export não é obrigatório.
       'import-x/prefer-default-export': 'off',
+      'no-use-before-define': 'off',
     },
   },
   {

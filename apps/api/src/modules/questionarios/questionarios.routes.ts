@@ -4,6 +4,7 @@ import { QuestionariosController } from './questionarios.controller';
 import { QuestionariosService } from './questionarios.service';
 
 import type { QuestionariosRepository } from './questionarios.repository';
+import type { AlunosRepository } from '../alunos/alunos.repository';
 
 /**
  * Motor de questionários: modelos de anamnese, avaliação e feedback.
@@ -19,12 +20,18 @@ import type { QuestionariosRepository } from './questionarios.repository';
  *   BE-QST-04 · Versionamento
  *     GET   /modelos/:id/versoes          → histórico de versões
  *     GET   /modelos/:id/versoes/:numero  → perguntas daquela versão
+ *   BE-QST-05 · Anamnese masculina/feminina
+ *     GET   /alunos/:alunoId/anamnese/modelo → modelo escolhido pelo sexo do aluno
+ *   BE-QST-06 · Avaliação físico-postural → modelo padrão (aparece em GET /modelos)
  *
  * O repositório entra por parâmetro (montado em routes.ts): hoje em memória;
  * com o Prisma basta trocar a implementação lá.
  */
-export function createQuestionariosRouter(repository: QuestionariosRepository): Router {
-  const controller = new QuestionariosController(new QuestionariosService(repository));
+export function createQuestionariosRouter(
+  repository: QuestionariosRepository,
+  alunos: AlunosRepository,
+): Router {
+  const controller = new QuestionariosController(new QuestionariosService(repository, alunos));
   const router = Router();
 
   router.post('/modelos', controller.criar);
@@ -36,6 +43,7 @@ export function createQuestionariosRouter(repository: QuestionariosRepository): 
   router.post('/modelos/:id/ativar', controller.ativar);
   router.get('/modelos/:id/versoes', controller.listarVersoes);
   router.get('/modelos/:id/versoes/:numero', controller.buscarVersao);
+  router.get('/alunos/:alunoId/anamnese/modelo', controller.anamneseDoAluno);
 
   return router;
 }

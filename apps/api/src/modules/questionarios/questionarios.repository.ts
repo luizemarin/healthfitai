@@ -138,6 +138,11 @@ export interface QuestionariosRepository {
     id: string,
     ativo: boolean,
   ) => Promise<ModeloQuestionario | null>;
+  /**
+   * BE-QST-05 · Todos os modelos ATIVOS de um tipo que o profissional enxerga
+   * (os dele + os padrão), sem paginação. Usado para escolher a anamnese do aluno.
+   */
+  listAtivosPorTipo: (profissionalId: string, tipo: TipoModelo) => Promise<ModeloQuestionario[]>;
   /** Versões do modelo, da mais recente para a mais antiga. */
   listVersoes: (modeloId: string) => Promise<ResumoVersao[]>;
   findVersao: (modeloId: string, numero: number) => Promise<VersaoModelo | null>;

@@ -82,6 +82,10 @@ model Usuario {
   aluno        Aluno?
   /// Lado inverso do 1:N com Sessao (DB-006). Não cria coluna aqui.
   sessoes      Sessao[]
+  /// Lado inverso do 1:N com Notificacao (DB-020). Não cria coluna aqui.
+  notificacoes Notificacao[]
+  /// Lado inverso do 1:N com IntegracaoExterna (DB-026). Não cria coluna aqui.
+  integracoes  IntegracaoExterna[]
 
   @@index([papel])
   @@map("usuarios")
@@ -102,9 +106,17 @@ model Profissional {
   usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
 
   /// Lado inverso do 1:N com Aluno (DB-004). Não cria coluna aqui.
-  alunos  Aluno[]
+  alunos              Aluno[]
   /// Lado inverso do 1:N com ModeloQuestionario (DB-007). Não cria coluna aqui.
-  modelos ModeloQuestionario[]
+  modelos             ModeloQuestionario[]
+  /// Lado inverso do 1:N com FeedbackComentario (DB-013). Não cria coluna aqui.
+  feedbackComentarios FeedbackComentario[]
+  /// Lado inverso do 1:N com PoseFoto (DB-014). Não cria coluna aqui.
+  posesFoto           PoseFoto[]
+  /// Lado inverso do 1:N com TipoMedida (DB-017). Não cria coluna aqui.
+  tiposMedida         TipoMedida[]
+  /// Lado inverso do 1:N com Exercicio (DB-022). Não cria coluna aqui.
+  exercicios          Exercicio[]
 
   @@map("profissionais")
 }
@@ -122,30 +134,52 @@ enum Sexo {
 /// Aluno de um profissional. Nasce pelo cadastro do personal (sem login);
 /// o vínculo com usuarios só aparece quando ele ativa a conta pelo convite.
 model Aluno {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// Nulo até o aluno ativar a conta. Único: um usuário é no máximo um aluno.
-  usuarioId      String?   @unique @map("usuario_id") @db.Uuid
+  usuarioId      String?  @unique @map("usuario_id") @db.Uuid
   /// Dono do aluno. Toda consulta filtra por aqui.
-  profissionalId String    @map("profissional_id") @db.Uuid
-  nome           String    @db.VarChar(120)
+  profissionalId String   @map("profissional_id") @db.Uuid
+  nome           String   @db.VarChar(120)
   sexo           Sexo
   /// Obrigatória: é por ela que o sistema sabe se o aluno é menor (LG-MEN-01).
   /// A idade é calculada, nunca guardada.
-  dataNascimento DateTime  @map("data_nascimento") @db.Date
+  dataNascimento DateTime @map("data_nascimento") @db.Date
   /// Contato (opcionais). E-mail em minúsculas; telefone só dígitos (DDD + número).
   /// O banco garante os dois formatos com CHECK (ver migration).
-  email          String?   @db.VarChar(254)
-  telefone       String?   @db.VarChar(11)
+  email          String?  @db.VarChar(254)
+  telefone       String?  @db.VarChar(11)
   /// Desativar em vez de apagar: o histórico do aluno é preservado.
-  ativo          Boolean   @default(true)
-  criadoEm       DateTime  @default(now()) @map("criado_em") @db.Timestamptz(3)
-  atualizadoEm   DateTime  @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+  ativo          Boolean  @default(true)
+  criadoEm       DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm   DateTime @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
 
   usuario      Usuario?     @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
   profissional Profissional @relation(fields: [profissionalId], references: [id], onDelete: Restrict)
 
   /// Lado inverso do 1:N com Convite (DB-005). Não cria coluna aqui.
-  convites Convite[]
+  convites             Convite[]
+  /// Lado inverso do 1:N com Submissao (DB-009). Não cria coluna aqui.
+  submissoes           Submissao[]
+  /// Lado inverso do 1:N com FeedbackAgendamento (DB-011). Não cria coluna aqui.
+  feedbackAgendamentos FeedbackAgendamento[]
+  /// Lado inverso do 1:N com Foto (DB-015). Não cria coluna aqui.
+  fotos                Foto[]
+  /// Lado inverso do 1:N com RegistroPeso (DB-016). Não cria coluna aqui.
+  registrosPeso        RegistroPeso[]
+  /// Lado inverso do 1:N com RegistroMedida (DB-017). Não cria coluna aqui.
+  registrosMedida      RegistroMedida[]
+  /// Lado inverso do 1:N com Responsavel (DB-018). Não cria coluna aqui.
+  responsaveis         Responsavel[]
+  /// Lado inverso do 1:N com Consentimento (DB-018). Não cria coluna aqui.
+  consentimentos       Consentimento[]
+  /// Lado inverso do 1:N com SolicitacaoTitular (DB-019). Não cria coluna aqui.
+  solicitacoesTitular  SolicitacaoTitular[]
+  /// Lado inverso do 1:N com Treino (DB-023). Não cria coluna aqui.
+  treinos              Treino[]
+  /// Lado inverso do 1:N com ExecucaoTreino (DB-024). Não cria coluna aqui.
+  execucoesTreino      ExecucaoTreino[]
+  /// Lado inverso do 1:N com PlanoNutricional (DB-025). Não cria coluna aqui.
+  planosNutricionais   PlanoNutricional[]
 
   /// Mesmo e-mail não se repete dentro do mesmo profissional (vários nulos podem).
   @@unique([profissionalId, email])
@@ -226,7 +260,11 @@ model ModeloQuestionario {
   profissional Profissional? @relation(fields: [profissionalId], references: [id], onDelete: Restrict)
 
   /// Lado inverso do 1:N com Pergunta (DB-008). Não cria coluna aqui.
-  perguntas Pergunta[]
+  perguntas            Pergunta[]
+  /// Lado inverso do 1:N com Submissao (DB-009). Não cria coluna aqui.
+  submissoes           Submissao[]
+  /// Lado inverso do 1:N com FeedbackAgendamento (DB-011). Não cria coluna aqui.
+  feedbackAgendamentos FeedbackAgendamento[]
 
   /// Listagem do painel: "meus modelos de anamnese ativos" (também serve à FK).
   @@index([profissionalId, tipo, ativo])
@@ -258,7 +296,720 @@ model Pergunta {
 
   modelo ModeloQuestionario @relation(fields: [modeloId], references: [id], onDelete: Restrict)
 
+  /// Lado inverso do 1:N com Resposta (DB-010). Não cria coluna aqui.
+  respostas Resposta[]
+
   /// Uma posição por modelo (também serve à FK e já ordena as perguntas).
   @@unique([modeloId, ordem])
   @@map("perguntas")
+}
+
+// ─── DB-009 · Respostas: submissões ─────────────────────────────────────────
+
+/// Estado de uma submissão. Só o rascunho pode ser editado.
+enum StatusSubmissao {
+  rascunho
+  final
+
+  @@map("status_submissao")
+}
+
+/// Uma vez em que um modelo foi preenchido para um aluno. As respostas de
+/// cada pergunta ficam em Resposta (DB-010).
+/// Nunca sobrescrever: responder de novo = nova submissão.
+model Submissao {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alunoId       String          @map("aluno_id") @db.Uuid
+  modeloId      String          @map("modelo_id") @db.Uuid
+  /// Cópia da versão do modelo no momento do preenchimento (CHECK >= 1).
+  versao        Int
+  status        StatusSubmissao @default(rascunho)
+  /// Quem preencheu: aluno (anamnese/feedback) ou profissional (avaliação).
+  preenchidoPor Papel           @map("preenchido_por")
+  /// Nulo no rascunho, obrigatório no final; o banco garante com CHECK.
+  respondidoEm  DateTime?       @map("respondido_em") @db.Timestamptz(3)
+  criadoEm      DateTime        @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm  DateTime        @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  aluno  Aluno              @relation(fields: [alunoId], references: [id], onDelete: Restrict)
+  modelo ModeloQuestionario @relation(fields: [modeloId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com Resposta (DB-010). Não cria coluna aqui.
+  respostas     Resposta[]
+  /// Lado inverso do 1:1 com FeedbackEnvio (DB-012). Só existe se a
+  /// submissão responde um feedback. Não cria coluna aqui.
+  feedbackEnvio FeedbackEnvio?
+
+  /// Histórico do aluno em ordem de data (também serve à FK).
+  @@index([alunoId, respondidoEm])
+  @@map("submissoes")
+}
+
+// ─── DB-010 · Respostas: respostas ──────────────────────────────────────────
+
+/// Resposta de uma pergunta dentro de uma submissão. Exatamente uma coluna
+/// de valor é preenchida (CHECK): texto/data -> valorTexto; numero/escala ->
+/// valorNumero; escolhas -> valorJson (lista).
+model Resposta {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  submissaoId  String   @map("submissao_id") @db.Uuid
+  perguntaId   String   @map("pergunta_id") @db.Uuid
+  valorTexto   String?  @map("valor_texto")
+  /// Mesmo formato de min/max das perguntas. Lido pelo gráfico de evolução.
+  valorNumero  Decimal? @map("valor_numero") @db.Decimal(10, 2)
+  valorJson    Json?    @map("valor_json")
+  criadoEm     DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm DateTime @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  /// Cascade: a resposta é parte da submissão (descartar rascunho leva junto).
+  submissao Submissao @relation(fields: [submissaoId], references: [id], onDelete: Cascade)
+  pergunta  Pergunta  @relation(fields: [perguntaId], references: [id], onDelete: Restrict)
+
+  /// Uma resposta por pergunta em cada submissão (também serve à FK).
+  @@unique([submissaoId, perguntaId])
+  /// Gráfico de evolução: valores de uma pergunta (também serve à FK).
+  @@index([perguntaId, valorNumero])
+  @@map("respostas")
+}
+
+// ─── DB-011 · Feedbacks: agendamentos ───────────────────────────────────────
+
+/// Regra de envio: "o aluno X recebe o feedback Y com esta frequência".
+/// Cada liberação vira um FeedbackEnvio (DB-012). O job busca os ativos com
+/// proximaLiberacao vencida, cria o envio e avança a data pela recorrência.
+/// avulso = libera uma vez; a API desativa depois do envio.
+/// A API valida que o modelo é do tipo feedback. Desativar em vez de apagar.
+model FeedbackAgendamento {
+  id               String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alunoId          String      @map("aluno_id") @db.Uuid
+  modeloId         String      @map("modelo_id") @db.Uuid
+  recorrencia      Recorrencia
+  /// Quando o próximo envio será liberado.
+  proximaLiberacao DateTime    @map("proxima_liberacao") @db.Timestamptz(3)
+  /// Dias após o envio, sem resposta, para mandar lembrete. Nulo = sem
+  /// lembrete. Se existir, >= 1 (CHECK).
+  lembreteDias     Int?        @map("lembrete_dias")
+  ativo            Boolean     @default(true)
+  criadoEm         DateTime    @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm     DateTime    @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  aluno  Aluno              @relation(fields: [alunoId], references: [id], onDelete: Restrict)
+  modelo ModeloQuestionario @relation(fields: [modeloId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com FeedbackEnvio (DB-012). Não cria coluna aqui.
+  envios FeedbackEnvio[]
+
+  /// Painel: "feedbacks ativos do aluno" (também serve à FK).
+  @@index([alunoId, ativo])
+  /// Serve à FK de modeloId.
+  @@index([modeloId])
+  /// Job de liberação: ativos com proximaLiberacao vencida.
+  @@index([ativo, proximaLiberacao])
+  @@map("feedback_agendamentos")
+}
+
+// ─── DB-012 · Feedbacks: envios ─────────────────────────────────────────────
+
+/// Uma liberação de feedback para o aluno. Guarda só o hash do token do link.
+/// Status x datas (garantido por CHECK, ver migration):
+///   agendado -> sem enviadoEm | enviado -> enviadoEm
+///   atrasado -> lembreteEm    | respondido -> respondidoEm + submissaoId
+/// Liberar de novo = novo envio: nada é sobrescrito.
+model FeedbackEnvio {
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  agendamentoId String         @map("agendamento_id") @db.Uuid
+  /// Nulo até o aluno começar a responder. Único: 1:1 com a submissão.
+  submissaoId   String?        @unique @map("submissao_id") @db.Uuid
+  status        StatusFeedback @default(agendado)
+  /// Único. 64 caracteres hex; o banco garante o formato com CHECK.
+  tokenHash     String         @unique @map("token_hash") @db.Char(64)
+  enviadoEm     DateTime?      @map("enviado_em") @db.Timestamptz(3)
+  /// Quando o lembrete foi mandado.
+  lembreteEm    DateTime?      @map("lembrete_em") @db.Timestamptz(3)
+  respondidoEm  DateTime?      @map("respondido_em") @db.Timestamptz(3)
+  criadoEm      DateTime       @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm  DateTime       @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  agendamento FeedbackAgendamento @relation(fields: [agendamentoId], references: [id], onDelete: Restrict)
+  submissao   Submissao?          @relation(fields: [submissaoId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com FeedbackComentario (DB-013). Não cria coluna aqui.
+  comentarios FeedbackComentario[]
+
+  /// Histórico de envios do agendamento (também serve à FK).
+  @@index([agendamentoId, criadoEm])
+  /// Jobs e painel: "próxima ação" por status (ex.: enviados sem resposta).
+  @@index([status, enviadoEm])
+  @@map("feedback_envios")
+}
+
+// ─── DB-013 · Feedbacks: comentários ────────────────────────────────────────
+
+/// Comentário do profissional num feedback respondido; o aluno vê no app.
+/// Nada é sobrescrito (sem atualizadoEm): corrigir = novo comentário.
+/// A API valida que o profissional é o dono do aluno.
+model FeedbackComentario {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  envioId        String   @map("envio_id") @db.Uuid
+  profissionalId String   @map("profissional_id") @db.Uuid
+  /// Não pode ser vazio; o banco garante com CHECK.
+  texto          String   @db.VarChar(2000)
+  criadoEm       DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+
+  envio        FeedbackEnvio @relation(fields: [envioId], references: [id], onDelete: Restrict)
+  profissional Profissional  @relation(fields: [profissionalId], references: [id], onDelete: Restrict)
+
+  /// Comentários do envio em ordem (também serve à FK).
+  @@index([envioId, criadoEm])
+  /// Serve à FK de profissionalId.
+  @@index([profissionalId])
+  @@map("feedback_comentarios")
+}
+
+// ─── DB-014 · Fotos: poses ──────────────────────────────────────────────────
+
+/// Pose de foto (ex.: frente, perfil, costas). Guia o envio no app e permite
+/// comparar a mesma pose em datas diferentes.
+/// profissionalId nulo = pose padrão do sistema (vem por seed, DB-021); a API
+/// copia as padrão para o profissional. Remover = desativar.
+model PoseFoto {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// Nulo = pose padrão do sistema (ninguém é dono; serve de base para copiar).
+  profissionalId String?  @map("profissional_id") @db.Uuid
+  /// Não pode ser vazio; o banco garante com CHECK (ver migration).
+  nome           String   @db.VarChar(60)
+  /// Posição na lista (1, 2, 3...). CHECK >= 1.
+  ordem          Int
+  ativa          Boolean  @default(true)
+  criadoEm       DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm   DateTime @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  profissional Profissional? @relation(fields: [profissionalId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com Foto (DB-015). Não cria coluna aqui.
+  fotos Foto[]
+
+  /// "Minhas poses ativas, em ordem" (também serve à FK).
+  @@index([profissionalId, ativa, ordem])
+  @@map("poses_foto")
+}
+
+// ─── DB-015 · Fotos: fotos ──────────────────────────────────────────────────
+
+/// Foto do aluno. O arquivo fica no storage (R2, bucket privado); aqui fica
+/// só a chave do objeto. A API gera URL assinada para exibir.
+/// Nada é sobrescrito (sem atualizadoEm): tirar de novo = nova foto.
+/// A API valida que a pose é do profissional do aluno (ou padrão).
+model Foto {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alunoId      String   @map("aluno_id") @db.Uuid
+  poseId       String   @map("pose_id") @db.Uuid
+  /// Dia da foto: a galeria agrupa e o comparador escolhe datas por aqui.
+  dataRegistro DateTime @map("data_registro") @db.Date
+  /// Chave da original no bucket. Única; não pode ser vazia (CHECK).
+  storageKey   String   @unique @map("storage_key") @db.VarChar(500)
+  /// Chave da miniatura. Nula até ficar pronta (BE-FOT-03). Única.
+  miniaturaKey String?  @unique @map("miniatura_key") @db.VarChar(500)
+  /// Tamanho da original em bytes (CHECK > 0).
+  tamanho      Int
+  /// Quem enviou: aluno (app) ou profissional (painel).
+  criadoPor    Papel    @map("criado_por")
+  criadoEm     DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+
+  aluno Aluno    @relation(fields: [alunoId], references: [id], onDelete: Restrict)
+  pose  PoseFoto @relation(fields: [poseId], references: [id], onDelete: Restrict)
+
+  /// Galeria do aluno agrupada por data (também serve à FK).
+  @@index([alunoId, dataRegistro])
+  /// Serve à FK de poseId.
+  @@index([poseId])
+  @@map("fotos")
+}
+
+// ─── DB-016 · Medidas: registros de peso ────────────────────────────────────
+
+/// Uma pesagem do aluno. Alimenta a curva de peso do gráfico de evolução.
+/// Nada é sobrescrito (sem atualizadoEm): pesou de novo = novo registro.
+model RegistroPeso {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alunoId       String   @map("aluno_id") @db.Uuid
+  /// Quilos com 2 casas (ex.: 72.35). Entre 0 e 500 (CHECK).
+  pesoKg        Decimal  @map("peso_kg") @db.Decimal(5, 2)
+  /// Dia da pesagem: o gráfico ordena por aqui.
+  dataRegistro  DateTime @map("data_registro") @db.Date
+  /// Quem lançou: aluno (app) ou profissional (painel).
+  registradoPor Papel    @map("registrado_por")
+  criadoEm      DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+
+  aluno Aluno @relation(fields: [alunoId], references: [id], onDelete: Restrict)
+
+  /// Gráfico de peso do aluno em ordem de data (também serve à FK).
+  @@index([alunoId, dataRegistro])
+  @@map("registros_peso")
+}
+
+// ─── DB-017 · Medidas: tipos de medida e registros ──────────────────────────
+
+/// O que se mede (ex.: Cintura em cm). Os valores ficam em RegistroMedida.
+/// profissionalId nulo = tipo padrão do sistema (vem por seed, DB-021).
+/// Remover = desativar: o histórico continua apontando para o tipo.
+model TipoMedida {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// Nulo = tipo padrão do sistema (ninguém é dono).
+  profissionalId String?  @map("profissional_id") @db.Uuid
+  /// Não pode ser vazio; o banco garante com CHECK (ver migration).
+  nome           String   @db.VarChar(60)
+  /// Ex.: "cm", "%", "mm". Vale para todos os registros do tipo. Não vazia (CHECK).
+  unidade        String   @db.VarChar(20)
+  ativo          Boolean  @default(true)
+  criadoEm       DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm   DateTime @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  profissional Profissional? @relation(fields: [profissionalId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com RegistroMedida. Não cria coluna aqui.
+  registros RegistroMedida[]
+
+  /// "Meus tipos ativos" (também serve à FK).
+  @@index([profissionalId, ativo])
+  @@map("tipos_medida")
+}
+
+/// Valor de uma medida do aluno num dia. Cada tipo vira uma curva no gráfico.
+/// Nada é sobrescrito (sem atualizadoEm): mediu de novo = novo registro.
+/// A API valida que o tipo é do profissional do aluno (ou padrão).
+model RegistroMedida {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alunoId       String   @map("aluno_id") @db.Uuid
+  tipoId        String   @map("tipo_id") @db.Uuid
+  /// Na unidade do tipo. Maior que zero (CHECK).
+  valor         Decimal  @db.Decimal(10, 2)
+  dataRegistro  DateTime @map("data_registro") @db.Date
+  /// Quem lançou: aluno (app) ou profissional (painel).
+  registradoPor Papel    @map("registrado_por")
+  criadoEm      DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+
+  aluno Aluno      @relation(fields: [alunoId], references: [id], onDelete: Restrict)
+  tipo  TipoMedida @relation(fields: [tipoId], references: [id], onDelete: Restrict)
+
+  /// Gráfico: "cintura do aluno X ao longo do tempo" (também serve à FK).
+  @@index([alunoId, tipoId, dataRegistro])
+  /// Serve à FK de tipoId.
+  @@index([tipoId])
+  @@map("registros_medida")
+}
+
+// ─── DB-018 · Transversal (LGPD): responsáveis e consentimentos ─────────────
+
+/// Tipo de consentimento. "ia" entra depois (DB-027).
+enum TipoConsentimento {
+  saude
+  fotos
+  termos
+  ciencia_adolescente
+
+  @@map("tipo_consentimento")
+}
+
+/// Quem age em nome do titular: o próprio aluno ou o responsável legal.
+/// Usado em Consentimento e SolicitacaoTitular (DB-019).
+enum AgenteTitular {
+  titular
+  responsavel
+
+  @@map("agente_titular")
+}
+
+/// Responsável legal de um aluno menor (LG-MEN-02). Sem CPF (minimização).
+/// As duas datas de verificação começam nulas (LG-MEN-04).
+model Responsavel {
+  id                           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alunoId                      String    @map("aluno_id") @db.Uuid
+  /// Não pode ser vazio (CHECK).
+  nome                         String    @db.VarChar(120)
+  /// Minúsculo, sem espaços nas pontas (CHECK). Único dentro do aluno.
+  email                        String    @db.VarChar(254)
+  /// Só dígitos: DDD + número, 10 ou 11 (CHECK).
+  telefone                     String    @db.VarChar(11)
+  /// Ex.: "mãe", "pai", "tutor legal". Não vazio (CHECK).
+  parentesco                   String    @db.VarChar(40)
+  /// O responsável confirmou o e-mail pelo link.
+  emailVerificadoEm            DateTime? @map("email_verificado_em") @db.Timestamptz(3)
+  /// O profissional declarou que este responsável assinou o contrato.
+  confirmadoPeloProfissionalEm DateTime? @map("confirmado_pelo_profissional_em") @db.Timestamptz(3)
+  criadoEm                     DateTime  @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm                 DateTime  @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  aluno Aluno @relation(fields: [alunoId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com Consentimento. Não cria coluna aqui.
+  consentimentos Consentimento[]
+
+  /// Mesmo e-mail não se repete no mesmo aluno (também serve à FK).
+  @@unique([alunoId, email])
+  @@map("responsaveis")
+}
+
+/// Um aceite de termo/consentimento. O titular é sempre o aluno.
+/// Ativo = revogadoEm nulo. Nova versão do termo = novo registro.
+/// concedidoPor = responsavel <=> responsavelId preenchido (CHECK).
+/// A API valida que o responsável é do mesmo aluno.
+model Consentimento {
+  id            String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alunoId       String            @map("aluno_id") @db.Uuid
+  tipo          TipoConsentimento
+  concedidoPor  AgenteTitular     @map("concedido_por")
+  responsavelId String?           @map("responsavel_id") @db.Uuid
+  /// Ex.: "1.0". Não vazia (CHECK).
+  versaoTermo   String            @map("versao_termo") @db.VarChar(20)
+  aceitoEm      DateTime          @default(now()) @map("aceito_em") @db.Timestamptz(3)
+  /// Revogar = preencher esta data (LG-CON-04). Nunca antes de aceitoEm (CHECK).
+  revogadoEm    DateTime?         @map("revogado_em") @db.Timestamptz(3)
+  /// IP de quem concedeu (LG-CON-01).
+  ip            String            @db.Inet
+
+  aluno       Aluno        @relation(fields: [alunoId], references: [id], onDelete: Restrict)
+  responsavel Responsavel? @relation(fields: [responsavelId], references: [id], onDelete: Restrict)
+
+  /// "O aluno X tem consentimento de saúde ativo?" (também serve à FK).
+  @@index([alunoId, tipo])
+  /// Serve à FK de responsavelId.
+  @@index([responsavelId])
+  @@map("consentimentos")
+}
+
+// ─── DB-019 · Transversal (LGPD): auditoria e solicitações do titular ───────
+
+/// Direito pedido pelo titular (LGPD art. 18).
+enum TipoSolicitacao {
+  acesso
+  exportacao
+  correcao
+  exclusao
+  revogacao
+
+  @@map("tipo_solicitacao")
+}
+
+/// Andamento do pedido. concluida/recusada <=> concluidoEm preenchido (CHECK).
+enum StatusSolicitacao {
+  aberta
+  em_andamento
+  concluida
+  recusada
+
+  @@map("status_solicitacao")
+}
+
+/// Log de "quem fez o quê, em qual registro, quando e de onde". Só INSERT.
+/// Sem FK de propósito: o log sobrevive à exclusão/anonimização do registro.
+/// Nunca gravar dado sensível aqui (LG-SEG-01).
+model Auditoria {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// Nulo = ação sem login (responsável pelo link mágico ou job do sistema).
+  usuarioId  String?  @map("usuario_id") @db.Uuid
+  /// Ex.: "anamnese.visualizar". Não vazia (CHECK).
+  acao       String   @db.VarChar(60)
+  /// Tabela afetada, ex.: "submissoes". Não vazia (CHECK).
+  entidade   String   @db.VarChar(60)
+  entidadeId String?  @map("entidade_id") @db.Uuid
+  criadoEm   DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+  ip         String?  @db.Inet
+
+  /// "Histórico de acessos do registro X".
+  @@index([entidade, entidadeId])
+  /// "O que o usuário Y fez", em ordem de data.
+  @@index([usuarioId, criadoEm])
+  @@map("auditoria")
+}
+
+/// Pedido do titular (ou do responsável, se menor) pelos direitos da LGPD.
+/// O prazo de resposta é calculado pela API a partir de criadoEm.
+model SolicitacaoTitular {
+  id          String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alunoId     String            @map("aluno_id") @db.Uuid
+  solicitante AgenteTitular
+  tipo        TipoSolicitacao
+  status      StatusSolicitacao @default(aberta)
+  criadoEm    DateTime          @default(now()) @map("criado_em") @db.Timestamptz(3)
+  /// Preenchido ao concluir ou recusar (CHECK).
+  concluidoEm DateTime?         @map("concluido_em") @db.Timestamptz(3)
+
+  aluno Aluno @relation(fields: [alunoId], references: [id], onDelete: Restrict)
+
+  /// Pedidos do aluno em ordem (também serve à FK).
+  @@index([alunoId, criadoEm])
+  /// Painel: "pedidos em aberto, mais antigos primeiro".
+  @@index([status, criadoEm])
+  @@map("solicitacoes_titular")
+}
+
+// ─── DB-020 · Transversal: fila de notificações ─────────────────────────────
+
+/// Por onde a notificação sai.
+enum CanalNotificacao {
+  email
+  push
+
+  @@map("canal_notificacao")
+}
+
+/// pendente -> enviando -> enviada | (de volta a pendente) | falhou
+enum StatusNotificacao {
+  pendente
+  enviando
+  enviada
+  falhou
+
+  @@map("status_notificacao")
+}
+
+/// Fila: a API só insere; um worker envia. usuarioId é opcional porque os
+/// convites vão para quem ainda não tem conta; o endereço fica em destino.
+/// payload: só o que o template precisa, nunca dado de saúde (LG-SEG-02).
+model Notificacao {
+  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// Nulo = destinatário ainda sem conta (convite do aluno ou do responsável).
+  usuarioId    String?            @map("usuario_id") @db.Uuid
+  canal        CanalNotificacao
+  /// E-mail ou token de push. Não vazio (CHECK).
+  destino      String             @db.VarChar(254)
+  /// Ex.: "convite_aluno". Não vazio (CHECK).
+  template     String             @db.VarChar(60)
+  /// Sempre um objeto JSON (CHECK).
+  payload      Json               @default("{}")
+  status       StatusNotificacao  @default(pendente)
+  /// Quantas vezes o worker tentou enviar. >= 0 (CHECK).
+  tentativas   Int                @default(0)
+  /// Não sai antes desta data (envio futuro e espera entre tentativas).
+  agendadaPara DateTime           @default(now()) @map("agendada_para") @db.Timestamptz(3)
+  criadoEm     DateTime           @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm DateTime           @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  usuario Usuario? @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+
+  /// Worker: "pendentes que já venceram".
+  @@index([status, agendadaPara])
+  /// Serve à FK de usuarioId.
+  @@index([usuarioId])
+  @@map("notificacoes")
+}
+
+// ─── DB-022 · Fase 2+ (rascunho): exercícios ────────────────────────────────
+
+/// Biblioteca de exercícios do profissional. Remover = desativar.
+model Exercicio {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  profissionalId String   @map("profissional_id") @db.Uuid
+  /// Não pode ser vazio (CHECK).
+  nome           String   @db.VarChar(120)
+  /// Texto livre por enquanto (ex.: "Pernas"). Não vazio (CHECK).
+  grupoMuscular  String   @map("grupo_muscular") @db.VarChar(60)
+  /// Sem descrição = null, nunca "" (CHECK).
+  descricao      String?  @db.VarChar(2000)
+  /// Link https de vídeo/imagem de demonstração (CHECK).
+  midiaUrl       String?  @map("midia_url") @db.VarChar(500)
+  ativo          Boolean  @default(true)
+  criadoEm       DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm   DateTime @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  profissional Profissional @relation(fields: [profissionalId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com TreinoExercicio (DB-023). Não cria coluna aqui.
+  itensTreino    TreinoExercicio[]
+  /// Lado inverso do 1:N com SerieExecucao (DB-024). Não cria coluna aqui.
+  seriesExecucao SerieExecucao[]
+
+  /// "Meus exercícios ativos" (também serve à FK).
+  @@index([profissionalId, ativo])
+  @@map("exercicios")
+}
+
+// ─── DB-023 · Fase 2+ (rascunho): treinos ───────────────────────────────────
+
+/// Treino de um aluno (ex.: "Treino A"). Os itens ficam em TreinoExercicio.
+/// Duplicar = novo treino; remover = desativar.
+model Treino {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alunoId      String   @map("aluno_id") @db.Uuid
+  /// Não pode ser vazio (CHECK).
+  nome         String   @db.VarChar(120)
+  ativo        Boolean  @default(true)
+  criadoEm     DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm DateTime @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  aluno Aluno @relation(fields: [alunoId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com TreinoExercicio. Não cria coluna aqui.
+  itens     TreinoExercicio[]
+  /// Lado inverso do 1:N com ExecucaoTreino (DB-024). Não cria coluna aqui.
+  execucoes ExecucaoTreino[]
+
+  /// "Treinos ativos do aluno" (também serve à FK).
+  @@index([alunoId, ativo])
+  @@map("treinos")
+}
+
+/// Exercício prescrito dentro de um treino, em ordem. Parte do treino (Cascade).
+/// A API valida que o exercício é do profissional do aluno.
+model TreinoExercicio {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  treinoId         String   @map("treino_id") @db.Uuid
+  exercicioId      String   @map("exercicio_id") @db.Uuid
+  /// Posição no treino (1, 2, 3...). Única dentro do treino (CHECK >= 1).
+  ordem            Int
+  /// Pelo menos 1 (CHECK).
+  series           Int
+  /// Texto curto: "12", "8-12", "até a falha". Não vazio (CHECK).
+  repeticoes       String   @db.VarChar(20)
+  /// 0 = sem descanso (CHECK >= 0).
+  descansoSegundos Int      @map("descanso_segundos")
+  /// Nulo = sem carga prescrita (ex.: peso do corpo). CHECK >= 0.
+  cargaKg          Decimal? @map("carga_kg") @db.Decimal(6, 2)
+  criadoEm         DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm     DateTime @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  treino    Treino    @relation(fields: [treinoId], references: [id], onDelete: Cascade)
+  exercicio Exercicio @relation(fields: [exercicioId], references: [id], onDelete: Restrict)
+
+  /// Uma posição por treino (também serve à FK e já ordena os itens).
+  @@unique([treinoId, ordem])
+  /// Serve à FK de exercicioId.
+  @@index([exercicioId])
+  @@map("treino_exercicios")
+}
+
+// ─── DB-024 · Fase 2+ (rascunho): execuções de treino ───────────────────────
+
+/// Um treino feito pelo aluno. O app envia ao finalizar, já completo:
+/// nada é sobrescrito (sem atualizadoEm). A API valida que o treino é do aluno.
+model ExecucaoTreino {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// Repete o dono do treino: o painel conta frequência sem JOIN.
+  alunoId         String   @map("aluno_id") @db.Uuid
+  treinoId        String   @map("treino_id") @db.Uuid
+  iniciadoEm      DateTime @map("iniciado_em") @db.Timestamptz(3)
+  /// Maior que zero (CHECK).
+  duracaoSegundos Int      @map("duracao_segundos")
+  criadoEm        DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+
+  aluno  Aluno  @relation(fields: [alunoId], references: [id], onDelete: Restrict)
+  treino Treino @relation(fields: [treinoId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com SerieExecucao. Não cria coluna aqui.
+  series SerieExecucao[]
+
+  /// Painel: frequência do aluno por data (também serve à FK).
+  @@index([alunoId, iniciadoEm])
+  /// Serve à FK de treinoId.
+  @@index([treinoId])
+  @@map("execucoes_treino")
+}
+
+/// Uma série feita numa execução. Aponta para o exercício (não para o item do
+/// treino): editar o treino não quebra o histórico. Parte da execução (Cascade).
+model SerieExecucao {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  execucaoId       String   @map("execucao_id") @db.Uuid
+  exercicioId      String   @map("exercicio_id") @db.Uuid
+  /// Nº da série (1, 2, 3...). CHECK >= 1.
+  serie            Int
+  /// Repetições feitas. CHECK >= 0.
+  repeticoes       Int
+  /// Carga usada. Nulo = sem carga. CHECK >= 0.
+  cargaKg          Decimal? @map("carga_kg") @db.Decimal(6, 2)
+  /// BE-TRE-02 · Descanso feito DEPOIS desta série, em segundos. Nulo = não medido. CHECK >= 0.
+  descansoSegundos Int?     @map("descanso_segundos")
+  criadoEm         DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+
+  execucao  ExecucaoTreino @relation(fields: [execucaoId], references: [id], onDelete: Cascade)
+  exercicio Exercicio      @relation(fields: [exercicioId], references: [id], onDelete: Restrict)
+
+  /// Uma linha por série de cada exercício na execução (também serve à FK).
+  @@unique([execucaoId, exercicioId, serie])
+  /// Gráfico de carga por exercício (também serve à FK).
+  @@index([exercicioId])
+  @@map("series_execucao")
+}
+
+// ─── DB-025 · Fase 2+ (escopo a detalhar): nutrição ─────────────────────────
+
+/// Plano nutricional do aluno (versão mínima). Plano novo = novo registro;
+/// o antigo é desativado.
+model PlanoNutricional {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  alunoId      String   @map("aluno_id") @db.Uuid
+  /// Não pode ser vazio (CHECK).
+  nome         String   @db.VarChar(120)
+  /// Sem observação = null, nunca "" (CHECK).
+  observacoes  String?  @db.VarChar(2000)
+  ativo        Boolean  @default(true)
+  criadoEm     DateTime @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm DateTime @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  aluno Aluno @relation(fields: [alunoId], references: [id], onDelete: Restrict)
+
+  /// Lado inverso do 1:N com PlanoNutricionalItem. Não cria coluna aqui.
+  itens PlanoNutricionalItem[]
+
+  /// "Plano ativo do aluno" (também serve à FK).
+  @@index([alunoId, ativo])
+  @@map("planos_nutricionais")
+}
+
+/// Refeição do plano, em ordem. Parte do plano (Cascade).
+model PlanoNutricionalItem {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  planoId      String    @map("plano_id") @db.Uuid
+  /// Posição no plano (1, 2, 3...). Única dentro do plano (CHECK >= 1).
+  ordem        Int
+  /// Ex.: "Café da manhã". Não vazia (CHECK).
+  refeicao     String    @db.VarChar(60)
+  /// Horário sugerido (só hora:minuto). Opcional.
+  horario      DateTime? @db.Time(0)
+  /// Alimentos e quantidades em texto livre. Não vazia (CHECK).
+  descricao    String    @db.VarChar(2000)
+  criadoEm     DateTime  @default(now()) @map("criado_em") @db.Timestamptz(3)
+  atualizadoEm DateTime  @default(now()) @updatedAt @map("atualizado_em") @db.Timestamptz(3)
+
+  plano PlanoNutricional @relation(fields: [planoId], references: [id], onDelete: Cascade)
+
+  /// Uma posição por plano (também serve à FK e já ordena as refeições).
+  @@unique([planoId, ordem])
+  @@map("planos_nutricionais_itens")
+}
+
+// ─── DB-026 · Fase 2+ (rascunho): integrações externas ──────────────────────
+
+/// Provedor conectado pelo usuário.
+enum ProvedorIntegracao {
+  google_fit
+  apple_health
+  google_calendar
+
+  @@map("provedor_integracao")
+}
+
+/// Conexão de um usuário com um provedor (OAuth). Tokens CIFRADOS pela API
+/// (nunca texto puro). Ativa = revogadoEm nulo; revogada não guarda tokens
+/// (CHECK). Reconectar = nova linha. A API garante uma ativa por provedor.
+model IntegracaoExterna {
+  id                  String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuarioId           String             @map("usuario_id") @db.Uuid
+  provedor            ProvedorIntegracao
+  /// Nulos quando o provedor não usa token no servidor (ex.: Apple Health).
+  accessTokenCifrado  String?            @map("access_token_cifrado")
+  refreshTokenCifrado String?            @map("refresh_token_cifrado")
+  tokenExpiraEm       DateTime?          @map("token_expira_em") @db.Timestamptz(3)
+  /// Permissões aceitas, como o provedor devolve (ex.: separadas por espaço).
+  escopo              String?            @db.VarChar(1000)
+  conectadoEm         DateTime           @default(now()) @map("conectado_em") @db.Timestamptz(3)
+  /// Nunca antes de conectadoEm (CHECK).
+  revogadoEm          DateTime?          @map("revogado_em") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+
+  /// "Integrações do usuário" (também serve à FK).
+  @@index([usuarioId, provedor])
+  @@map("integracoes_externas")
 }

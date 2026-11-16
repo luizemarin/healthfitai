@@ -1,4 +1,5 @@
 import {
+  alunoAnamneseParamsSchema,
   criarModeloBodySchema,
   duplicarModeloBodySchema,
   editarModeloBodySchema,
@@ -146,7 +147,7 @@ export class QuestionariosController {
 
     const modelo = await this.service.desativar(profissionalId, params.id);
 
-    response.json(toResponse(modelo));
+    response.status(201).json(toResponse(modelo));
   };
 
   ativar: RequestHandler = async (request, response) => {
@@ -154,6 +155,16 @@ export class QuestionariosController {
     const { params } = validateRequest(request, { params: modeloIdParamsSchema });
 
     const modelo = await this.service.ativar(profissionalId, params.id);
+
+    response.status(201).json(toResponse(modelo));
+  };
+
+  /** BE-QST-05 · Modelo de anamnese escolhido pelo sexo do aluno. */
+  anamneseDoAluno: RequestHandler = async (request, response) => {
+    const profissionalId = getProfissionalId(request);
+    const { params } = validateRequest(request, { params: alunoAnamneseParamsSchema });
+
+    const modelo = await this.service.anamneseDoAluno(profissionalId, params.alunoId);
 
     response.json(toResponse(modelo));
   };

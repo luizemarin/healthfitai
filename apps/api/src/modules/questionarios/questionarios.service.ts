@@ -18,6 +18,7 @@ import type {
   PerguntaBody,
 } from './questionarios.schemas';
 import type { Paginated } from '../../shared/http/pagination';
+import type { AlunosRepository, Sexo } from '../alunos/alunos.repository';
 
 /** Erros de negócio do módulo (código próprio para o front decidir o que mostrar). */
 const Erros = {
@@ -34,6 +35,20 @@ const Erros = {
     new AppError(409, 'MODELO_INATIVO', 'O modelo está inativo. Ative o modelo antes de editar.'),
   modeloJaAtivo: () => new AppError(409, 'MODELO_JA_ATIVO', 'O modelo já está ativo.'),
   modeloJaInativo: () => new AppError(409, 'MODELO_JA_INATIVO', 'O modelo já está inativo.'),
+  alunoNaoEncontrado: () => AppError.notFound('Aluno não encontrado.'),
+  alunoInativo: () =>
+    new AppError(
+      409,
+      'ALUNO_INATIVO',
+      'O aluno está inativo. Reative o aluno para enviar a anamnese.',
+    ),
+  anamneseNaoDisponivel: (sexo: Sexo) =>
+    new AppError(
+      404,
+      'ANAMNESE_NAO_DISPONIVEL',
+      `Nenhum modelo de anamnese ativo serve para alunos do sexo ${sexo}. ` +
+        `Crie ou ative um modelo de anamnese ${sexo} (ou para qualquer sexo).`,
+    ),
   modeloDesatualizado: (versaoAtual: number) =>
     new AppError(
       409,
@@ -80,6 +95,24 @@ function mesmasPerguntas(atuais: Pergunta[], novas: NovaPergunta[]): boolean {
   return JSON.stringify(atuais.map(semId)) === JSON.stringify(novas.map(semId));
 }
 
+/**
+ * BE-QST-05 · Quanto MENOR, melhor o modelo serve ao aluno. null = não serve
+ * (modelo feito para o outro sexo).
+ *   0 · do profissional, para o sexo do aluno
+ *   1 · do profissional, para qualquer sexo
+ *   2 · padrão do sistema, para o sexo do aluno
+ *   3 · padrão do sistema, para qualquer sexo
+ * Assim, o modelo que o profissional criou/duplicou sempre ganha do padrão.
+ */
+function prioridadeParaAluno(modelo: ModeloQuestionario, sexo: Sexo): number | null {
+  if (modelo.sexoAlvo !== null && modelo.sexoAlvo !== sexo) {
+    return null;
+  }
+  const pesoDono = modelo.profissionalId === null ? 2 : 0;
+  const pesoSexo = modelo.sexoAlvo === sexo ? 0 : 1;
+  return pesoDono + pesoSexo;
+}
+
 function nomeDaCopia(nomeOriginal: string): string {
   return nomeOriginal.slice(0, NOME_MAXIMO - SUFIXO_COPIA.length) + SUFIXO_COPIA;
 }
@@ -90,13 +123,18 @@ function nomeDaCopia(nomeOriginal: string): string {
  *   BE-QST-02 · tipos de pergunta (validados nos schemas)
  *   BE-QST-03 · flag "exibir no gráfico de evolução" (só numero/escala)
  *   BE-QST-04 · editar as perguntas cria uma versão nova; as antigas ficam intactas
+ *   BE-QST-05 · escolhe a anamnese pelo sexo do aluno
+ *   BE-QST-06 · avaliação físico-postural padrão (vem pronta no repositório/seed)
  * Não conhece HTTP/Express.
  */
 export class QuestionariosService {
   private readonly repository: QuestionariosRepository;
 
-  constructor(repository: QuestionariosRepository) {
+  private readonly alunos: AlunosRepository;
+
+  constructor(repository: QuestionariosRepository, alunos: AlunosRepository) {
     this.repository = repository;
+    this.alunos = alunos;
   }
 
   async criar(profissionalId: string, dados: CriarModeloBody): Promise<ModeloQuestionario> {
@@ -208,6 +246,39 @@ export class QuestionariosService {
       throw Erros.modeloJaAtivo();
     }
     return this.definirAtivo(profissionalId, id, true);
+  }
+
+  /**
+   * BE-QST-05 · Modelo de anamnese que o aluno deve responder, pelo sexo dele.
+   * Regra em prioridadeParaAluno(). Empate (ex.: o profissional tem duas
+   * anamneses masculinas ativas): vale a editada mais recentemente.
+   */
+  async anamneseDoAluno(profissionalId: string, alunoId: string): Promise<ModeloQuestionario> {
+    const aluno = await this.alunos.findById(profissionalId, alunoId);
+    if (!aluno) {
+      throw Erros.alunoNaoEncontrado();
+    }
+    if (!aluno.ativo) {
+      throw Erros.alunoInativo();
+    }
+
+    const candidatos = (await this.repository.listAtivosPorTipo(profissionalId, 'anamnese'))
+      .map((modelo) => ({ modelo, prioridade: prioridadeParaAluno(modelo, aluno.sexo) }))
+      .filter(
+        (item): item is { modelo: ModeloQuestionario; prioridade: number } =>
+          item.prioridade !== null,
+      )
+      .sort(
+        (a, b) =>
+          a.prioridade - b.prioridade ||
+          b.modelo.atualizadoEm.getTime() - a.modelo.atualizadoEm.getTime(),
+      );
+
+    const [escolhido] = candidatos;
+    if (!escolhido) {
+      throw Erros.anamneseNaoDisponivel(aluno.sexo);
+    }
+    return escolhido.modelo;
   }
 
   /** BE-QST-04 · Histórico de versões do modelo (mais recente primeiro). */
