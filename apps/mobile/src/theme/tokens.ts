@@ -1,24 +1,26 @@
 /**
  * Tokens do design system: a única fonte de cores, fontes e espaçamentos do app.
- * Telas usam os tokens, nunca valores soltos (ex.: `colors.text`, não '#FCF1D0').
+ * Telas usam os tokens, nunca valores soltos (ex.: `colors.text`, não '#F1F4FA').
  *
- * Paleta da Fase 1 (tema escuro): os azuis são fundo; texto, campos e botões usam o creme.
+ * Paleta A3 (tema escuro): azul royal escuro no fundo e nas superfícies, tangerina nas ações.
  */
 const palette = {
-  navy900: '#010736',
-  navy800: '#0D1C42',
-  navy700: '#22396F',
-  cream: '#FCF1D0',
+  royal950: '#081225',
+  royal900: '#0E1B35',
+  royal700: '#1F3460',
+  white: '#F1F4FA',
+  slate: '#9EAED0',
+  tangerine: '#F28705',
 } as const;
 
 export const colors = {
-  background: palette.navy900, // fundo das telas
-  surface: palette.navy800, // cards, campos
-  border: palette.navy700, // bordas, divisores, estados de foco
-  text: palette.cream,
-  textMuted: 'rgba(252, 241, 208, 0.7)', // creme com 70% de opacidade
-  primary: palette.cream, // botão principal
-  onPrimary: palette.navy900, // texto sobre o botão principal
+  background: palette.royal950, // fundo das telas e dos campos
+  surface: palette.royal900, // cards
+  border: palette.royal700, // bordas, divisores, estados de foco
+  text: palette.white,
+  textMuted: palette.slate, // texto secundário
+  primary: palette.tangerine, // botão principal
+  onPrimary: palette.royal950, // texto sobre o botão principal
 } as const;
 
 /** Nomes registrados em src/theme/fonts.ts. Space Grotesk: títulos e números; Inter: interface. */

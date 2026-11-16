@@ -4,25 +4,25 @@
  * O tailwind.config.ts gera as classes a partir daqui (ex.: `bg-surface`, `text-foreground`,
  * `p-md`, `md:`). Os nomes seguem os do app mobile, para a mesma classe significar o mesmo.
  *
- * Paleta da Fase 1 (tema escuro): os azuis são fundo; texto, campos e botões usam o creme.
+ * Paleta A3 (tema escuro): azul royal escuro no fundo e nas superfícies, tangerina nas ações.
  */
 export const colors = {
-  /** Fundo da página. */
-  background: '#010736',
-  /** Superfícies: cards, painéis, campos. */
-  surface: '#0D1C42',
+  /** Fundo da página e dos campos. */
+  background: '#081225',
+  /** Superfícies: cards e painéis. */
+  surface: '#0E1B35',
   /** Bordas, divisores e hover. */
-  border: '#22396F',
+  border: '#1F3460',
   /** Texto e ícones. */
-  text: '#FCF1D0',
-  /** Texto secundário: o mesmo creme, mais apagado. */
-  textMuted: 'rgb(252 241 208 / 70%)',
-  /** Botão principal. */
-  primary: '#FCF1D0',
+  text: '#F1F4FA',
+  /** Texto secundário: cinza-azulado (contraste ≥ 7:1 no surface). */
+  textMuted: '#9EAED0',
+  /** Botão principal: tangerina. */
+  primary: '#F28705',
   /** Texto sobre o botão principal. */
-  onPrimary: '#010736',
-  /** Erros e validações: coral claro, legível sobre os azuis (contraste ≥ 7:1 no surface). */
-  danger: '#FF9E8F',
+  onPrimary: '#081225',
+  /** Erros e alertas: vermelho forte, distinto da tangerina (contraste ≥ 5:1 no surface). */
+  danger: '#FF5A5F',
 } as const;
 
 /** Fontes com fallback: se a fonte web não carregar, o navegador usa a do sistema. */

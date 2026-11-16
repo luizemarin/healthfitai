@@ -29,6 +29,10 @@ src/
     form/                  Field: label com * de obrigatório, dica e erro do campo
   features/
     alunos/                lista, cadastro/edição, ficha por abas e convite (FE-ALU-01..04)
+    questionarios/         modelos, construtor de perguntas e anamnese respondida (FE-QST-01..03)
+    avaliacoes/            preenchimento e histórico das avaliações físico-posturais (FE-AVA-01..02)
+    treinos/               montagem, edição e duplicação de treinos do aluno (FE-TRE-01)
+    dashboard/             frequência e progresso: visão consolidada dos alunos e detalhe (FE-DSH-01)
   api/
     client.ts              `api` (com token) e `publicApi` (sem token) + `unwrap`
     api-error.ts           ApiError: formato único de erro para as telas
@@ -190,6 +194,120 @@ Para conferir visual e responsividade sem a API: `npm run dev:web` e abra
 - Validação do formulário em `aluno-validacao.ts`, com as **mesmas regras do back**
   (`apps/api/src/modules/alunos/alunos.schemas.ts`). Mudou lá? Ajuste aqui.
 - O link do convite só existe na resposta de gerar/reenviar: aparece uma vez para copiar.
+
+## Questionários (FE-QST-01..03)
+
+| Rota                         | Tela                                                                   |
+| ---------------------------- | ---------------------------------------------------------------------- |
+| `/questionarios`             | Modelos: busca, filtros de tipo e situação, paginação (filtros na URL) |
+| `/questionarios/novo?tipo=…` | Criar modelo (o tipo vem do filtro da lista, se houver)                |
+| `/questionarios/:id`         | Editar modelo — ou só ver, se for padrão do sistema ou estiver inativo |
+| `/alunos/:id?aba=anamnese`   | Anamneses respondidas pelo aluno, por data (FE-QST-03)                 |
+
+- Chamadas à API só em `features/questionarios/questionarios-api.ts`.
+- **Gestão (FE-QST-01):** duplicar abre a cópia para editar; desativar pede confirmação e não apaga nada.
+  Modelo **padrão** do sistema é só leitura: tem "Ver" e "Duplicar". Modelo **inativo**: "Ver" e "Ativar".
+- **Construtor (FE-QST-02):** adicionar, remover e ordenar (↑ ↓) perguntas; tipo, obrigatória e, em
+  número/escala, unidade, mínimo/máximo e "Exibir no gráfico de evolução". A ordem da lista é a ordem
+  do formulário do aluno. Opções de escolha: uma por linha.
+- Validação em `modelo-validacao.ts`, com as **mesmas regras do back**
+  (`apps/api/src/modules/questionarios/questionarios.schemas.ts`). Mudou lá? Ajuste aqui.
+  Erros do back por pergunta (`body.perguntas.2.enunciado`) vão para o campo certo.
+- Editar envia a `versao` aberta: se outra pessoa salvou antes, o back recusa (409) e a mensagem dele
+  aparece no aviso. Mudar as perguntas cria uma versão nova; as respostas antigas ficam na versão delas.
+- **Anamnese respondida (FE-QST-03):** lista por data (mais recente primeiro) com modelo e versão; ao abrir,
+  as perguntas aparecem como estavam na versão respondida (`?resposta=<id>` na URL).
+- Erros: quando o back manda uma mensagem pensada para o usuário (4xx), ela é usada no aviso e na tela de
+  erro (`mensagemDaApi`/`avisarErro`); sem conexão, sessão expirada e servidor fora usam o texto padrão.
+  Se as cores não carregarem, vale o aviso geral do painel (ThemeNotice) e as telas seguem legíveis.
+
+## Avaliações (FE-AVA-01..02)
+
+| Rota                          | Tela                                                        |
+| ----------------------------- | ----------------------------------------------------------- |
+| `/alunos/:id/avaliacoes/nova` | Preencher avaliação físico-postural (FE-AVA-01)             |
+| `/alunos/:id?aba=avaliacoes`  | Histórico e comparação das avaliações, por data (FE-AVA-02) |
+
+- Chamadas à API só em `features/avaliacoes/avaliacoes-api.ts`. A avaliação usa o motor de questionários:
+  modelo do tipo `avaliacao` (o padrão traz os 5 testes — BE-QST-06), preenchido pelo profissional (BE-RSP-03).
+- **Preenchimento (FE-AVA-01):** escolhe o modelo ativo (se houver mais de um) e "Começar avaliação" — se já
+  existir rascunho daquele modelo, o back devolve o mesmo, com as respostas já salvas. Data da avaliação:
+  hoje por padrão, não aceita futuro. Ao registrar, vira registro final, datado e imutável.
+- Cada tipo de pergunta vira o campo certo (`campo-pergunta.tsx`): escolha única/sim-não em opções,
+  múltipla escolha em caixas de marcar, número/escala com mínimo/máximo/unidade, texto e data.
+- Erros do back vão para o campo certo: obrigatória pendente (`perguntas.<id>`), valor inválido
+  (`body.respostas.<i>.valor`) e data (`body.respondidoEm`). Aluno inativo e avaliação já enviada
+  mostram a mensagem do back no aviso.
+- **Histórico (FE-AVA-02):** lista por data (mais recente primeiro); marque as avaliações para comparar
+  lado a lado — uma linha por teste, colunas da mais antiga para a mais nova. Abre com as duas mais
+  recentes marcadas. Entre versões do modelo, o mesmo teste é ligado pelo enunciado; teste que não
+  existia naquela versão aparece como "Não avaliado".
+
+## Fotos (FE-FOT-01..03)
+
+| Rota                    | Tela                                                                      |
+| ----------------------- | ------------------------------------------------------------------------- |
+| `/fotos/poses`          | Poses que o app pede ao aluno, na ordem: adicionar e remover (FE-FOT-01)  |
+| `/alunos/:id?aba=fotos` | Comparador antes/depois (FE-FOT-03) e galeria por data e pose (FE-FOT-02) |
+
+- Chamadas à API só em `features/fotos/fotos-api.ts` (BE-FOT-01 e BE-FOT-04).
+- **Poses (FE-FOT-01):** na primeira vez o back cria as padrão (Frente, Perfil e Costas). A pose nova entra
+  no fim. Remover pede confirmação e não apaga nada: a pose some do app e as fotos antigas ficam.
+  Nome repetido, limite de poses e "última pose ativa" mostram a mensagem do back no aviso.
+- **Galeria (FE-FOT-02):** dias com fotos, do mais recente ao mais antigo; no dia, uma miniatura por pose.
+  Paginação por data (100 dias por página).
+- **Comparador (FE-FOT-03):** aparece com fotos em pelo menos duas datas. Abre com a data mais antiga
+  (antes) e a mais recente (depois), escolhidas entre as datas da galeria; botões trocam a pose e o slider
+  move a divisão entre as fotos sobrepostas. Pose sem foto numa das datas mostra só a que existe.
+- **Fotos que não abrem:** as URLs são assinadas e expiram em minutos. Se uma imagem falhar, aparece
+  "Não foi possível exibir a foto" com "Recarregar fotos" (busca URLs novas) no lugar da imagem quebrada.
+- `Comparacao` é tipada à mão em `fotos-api.ts`: o gerador transforma a foto `null` em um tipo impossível.
+
+## Treinos (FE-TRE-01)
+
+| Rota                            | Tela                                        |
+| ------------------------------- | ------------------------------------------- |
+| `/alunos/:id?aba=treinos`       | Treinos do aluno: montar, editar e duplicar |
+| `/alunos/:id/treinos/novo`      | Montar treino (editor)                      |
+| `/alunos/:id/treinos/:treinoId` | Editar treino (mesmo editor)                |
+
+- Chamadas à API só em `features/treinos/treinos-api.ts` (BE-TRE-01).
+- **Editor:** nome + exercícios na ordem em que o aluno vai fazer (↑ ↓ para mudar a ordem). Cada exercício
+  tem séries, repetições, descanso (segundos) e carga (kg, opcional — vazio = sem carga). Os exercícios vêm
+  da biblioteca (FE-EXE-01) pela busca "Adicionar exercício"; cada um entra uma vez só no treino.
+- Salvar a edição envia a lista inteira (o back substitui). Os treinos já feitos pelo aluno não mudam.
+- Exercício excluído da biblioteca depois aparece com a etiqueta "Excluído da biblioteca": remova-o
+  antes de salvar ou duplicar (o back recusa e explica).
+- **Duplicar:** cria a cópia para o mesmo aluno ("<nome> (cópia)") e já abre ela no editor.
+- Validação em `treino-validacao.ts`, com as **mesmas regras do back**
+  (`apps/api/src/modules/treinos/treinos.schemas.ts`). Mudou lá? Ajuste aqui.
+  Erros do back por exercício (`body.exercicios.2.series`) vão para o campo certo; aluno inativo e
+  treino com exercício excluído mostram a mensagem do back no aviso.
+- Se a lista, o treino ou a biblioteca não carregarem, aparece o `ErrorState` com mensagem amigável
+  (ou a do back, quando é para o usuário) e "Tentar novamente". Se as cores não carregarem, vale o aviso
+  geral do painel (ThemeNotice) e as telas seguem legíveis nas cores do sistema.
+
+## Dashboard (FE-DSH-01)
+
+| Rota                    | Tela                                                                    |
+| ----------------------- | ----------------------------------------------------------------------- |
+| `/dashboard`            | Visão consolidada: frequência de cada aluno no período (filtros na URL) |
+| `/dashboard/alunos/:id` | Detalhe do aluno: frequência, treinos por semana e progressão de carga  |
+
+- Chamadas à API só em `features/dashboard/dashboard-api.ts` (BE-DSH-01). Os números vêm prontos do back
+  (só treinos finalizados contam); a tela só formata.
+- **Visão consolidada:** busca pelo nome, situação (ativos — padrão do back — ou inativos), ordenação
+  (nome, treinos, último treino) e paginação. Cada card mostra treinos, dias treinados, média semanal,
+  último treino e dias sem treinar, e abre o detalhe no mesmo período.
+- **Período:** "De" e "Até" vazios = últimos 30 dias (padrão do back). O período usado aparece acima da lista.
+  Data no futuro, "De" depois de "Até" ou período longo demais: o back recusa e a mensagem dele aparece
+  embaixo do campo, com "Usar últimos 30 dias" (sem "Tentar novamente", que não resolveria).
+- **Detalhe:** barras de treinos por semana (todas as semanas do período, inclusive com 0) e uma linha por
+  exercício com carga inicial, atual e variação; "Cargas por dia" mostra a maior carga de cada dia.
+  Exercício excluído da biblioteca aparece com a etiqueta "Excluído da biblioteca".
+- Se a visão ou o detalhe não carregarem, aparece o `ErrorState` com mensagem amigável (ou a do back,
+  quando é para o usuário — ex.: "Aluno não encontrado.") e "Tentar novamente". Se as cores não carregarem,
+  vale o aviso geral do painel (ThemeNotice) e as telas seguem legíveis nas cores do sistema.
 
 ## Erros e validações na tela
 
