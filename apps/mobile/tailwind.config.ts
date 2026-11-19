@@ -18,7 +18,7 @@ const toPx = <K extends string>(scale: Record<K, number>): Record<K, string> =>
  * só existe o que é do design system (ex.: não há `bg-red-500`).
  *
  *   bg-background · bg-surface · border-border · bg-primary · text-primary-foreground
- *   text-foreground · text-foreground-muted · font-heading · text-xl · rounded-md · p-lg · gap-md
+ *   text-foreground · text-foreground-muted · text-danger · font-heading · text-xl · rounded-md · p-lg · gap-md
  */
 export default {
   content: { relative: true, files: ['./src/**/*.{ts,tsx}'] },
@@ -31,6 +31,7 @@ export default {
       border: colors.border,
       foreground: { DEFAULT: colors.text, muted: colors.textMuted },
       primary: { DEFAULT: colors.primary, foreground: colors.onPrimary },
+      danger: colors.danger,
     },
     fontFamily: {
       heading: [fonts.heading],

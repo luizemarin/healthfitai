@@ -114,6 +114,24 @@ const Erros = {
       `A situação do feedback mudou para "${NOMES_STATUS[atual]}" enquanto a operação ` +
         'acontecia. Atualize a tela e tente de novo.',
     ),
+  feedbackJaRespondido: () =>
+    new AppError(409, 'FEEDBACK_JA_RESPONDIDO', 'Este feedback já foi respondido.'),
+  feedbackNaoLiberado: () =>
+    new AppError(
+      409,
+      'FEEDBACK_NAO_LIBERADO',
+      'Este feedback ainda não foi liberado para resposta.',
+    ),
+  feedbackDeOutroModelo: () =>
+    AppError.validation(
+      [
+        {
+          field: 'body.feedbackId',
+          message: 'Estas respostas são de outro questionário, não do modelo deste feedback.',
+        },
+      ],
+      'Estas respostas são de outro questionário, não do modelo deste feedback.',
+    ),
   dataAnteriorAoEnvio: () =>
     new AppError(
       400,
@@ -432,6 +450,23 @@ export class FeedbacksService {
    */
   async marcarEnviado(envioId: string, enviadoEm: Date): Promise<EnvioFeedback> {
     return this.mudarStatus(envioId, { para: 'enviado', enviadoEm });
+  }
+
+  /**
+   * Uso interno do fluxo de resposta, ANTES de enviar: o feedback é do aluno,
+   * do mesmo modelo das respostas e está esperando resposta (enviado/atrasado).
+   */
+  async conferirResposta(alunoId: string, envioId: string, modeloId: string): Promise<void> {
+    const envio = await this.buscarEnvioDoAluno(alunoId, envioId);
+    if (envio.modeloId !== modeloId) {
+      throw Erros.feedbackDeOutroModelo();
+    }
+    if (envio.status === 'respondido') {
+      throw Erros.feedbackJaRespondido();
+    }
+    if (!podeMudarStatus(envio.status, 'respondido')) {
+      throw Erros.feedbackNaoLiberado();
+    }
   }
 
   /**

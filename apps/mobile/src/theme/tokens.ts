@@ -11,6 +11,7 @@ const palette = {
   white: '#F1F4FA',
   slate: '#9EAED0',
   tangerine: '#F28705',
+  coral: '#FF5A5F',
 } as const;
 
 export const colors = {
@@ -21,6 +22,7 @@ export const colors = {
   textMuted: palette.slate, // texto secundário
   primary: palette.tangerine, // botão principal
   onPrimary: palette.royal950, // texto sobre o botão principal
+  danger: palette.coral, // erros e alertas (vermelho forte, distinto da tangerina; igual ao painel)
 } as const;
 
 /** Nomes registrados em src/theme/fonts.ts. Space Grotesk: títulos e números; Inter: interface. */

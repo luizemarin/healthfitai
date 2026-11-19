@@ -23,7 +23,9 @@ function texto(maximo: number): Validador {
     }
     const limpo = valor.trim();
     if (limpo === '') {
-      return { erro: 'A resposta não pode ficar vazia. Caso não queira responder, deixe a pergunta em branco.' };
+      return {
+        erro: 'A resposta não pode ficar vazia. Caso não queira responder, deixe a pergunta em branco.',
+      };
     }
     if (limpo.length > maximo) {
       return { erro: `A resposta deve ter no máximo ${maximo} caracteres.` };
@@ -68,7 +70,9 @@ const escala: Validador = (valor, pergunta) => {
 };
 
 const simNao: Validador = (valor) =>
-  typeof valor === 'boolean' ? { valor } : { erro: 'Responda com verdadeiro (sim) ou falso (não).' };
+  typeof valor === 'boolean'
+    ? { valor }
+    : { erro: 'Responda com verdadeiro (sim) ou falso (não).' };
 
 const data: Validador = (valor) => {
   if (typeof valor !== 'string' || !DATA_ISO.test(valor)) {

@@ -4,6 +4,7 @@ import { RespostasController } from './respostas.controller';
 import { RespostasService } from './respostas.service';
 
 import type { RespostasRepository } from './respostas.repository';
+import type { RespostaDeFeedback } from './respostas.service';
 import type { AlunosRepository } from '../alunos/alunos.repository';
 import type { QuestionariosRepository } from '../questionarios/questionarios.repository';
 
@@ -19,6 +20,9 @@ import type { QuestionariosRepository } from '../questionarios/questionarios.rep
  *     GET   /alunos/:alunoId/submissoes                 → finais por tipo/modelo/período
  *     GET   /alunos/:alunoId/submissoes/:id             → detalhe com perguntas e valores
  *
+ * BE-FBK-04 · Ao enviar um feedback com "feedbackId", ele passa a "respondido"
+ * (`feedbacks` = FeedbacksService, montado em routes.ts).
+ *
  * Os repositórios entram por parâmetro (montados em routes.ts): hoje em memória;
  * com o Prisma basta trocar a implementação lá.
  */
@@ -26,9 +30,10 @@ export function createRespostasRouter(
   repository: RespostasRepository,
   questionarios: QuestionariosRepository,
   alunos: AlunosRepository,
+  feedbacks: RespostaDeFeedback,
 ): Router {
   const controller = new RespostasController(
-    new RespostasService(repository, questionarios, alunos),
+    new RespostasService(repository, questionarios, alunos, feedbacks),
   );
   const router = Router();
 

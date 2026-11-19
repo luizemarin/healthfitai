@@ -17,7 +17,8 @@ import type { QuestionariosRepository } from '../questionarios/questionarios.rep
  *     POST  /alunos/:alunoId/feedback-agendamentos/:id/desativar
  *     POST  /alunos/:alunoId/feedback-agendamentos/:id/ativar
  *   BE-FBK-03 · Lembrete → "lembreteDias" no agendamento; o job usa processarLembretes()
- *   BE-FBK-04 · Status (as mudanças vêm do job e da resposta do aluno, não de rota)
+ *   BE-FBK-04 · Status (as mudanças vêm do job e da resposta do aluno, não de rota:
+ *               POST /alunos/:alunoId/submissoes/:id/finalizar com "feedbackId")
  *     GET   /alunos/:alunoId/feedbacks                            → listar por status
  *     GET   /alunos/:alunoId/feedbacks/:id                        → detalhe com comentários
  *   BE-FBK-05 · Comentários do profissional

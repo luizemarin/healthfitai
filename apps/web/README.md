@@ -32,6 +32,7 @@ src/
     questionarios/         modelos, construtor de perguntas e anamnese respondida (FE-QST-01..03)
     avaliacoes/            preenchimento e histórico das avaliações físico-posturais (FE-AVA-01..02)
     treinos/               montagem, edição e duplicação de treinos do aluno (FE-TRE-01)
+    nutricao/              plano nutricional do aluno: em uso, criar, editar, encerrar e histórico (FE-NUT-01)
     dashboard/             frequência e progresso: visão consolidada dos alunos e detalhe (FE-DSH-01)
   api/
     client.ts              `api` (com token) e `publicApi` (sem token) + `unwrap`
@@ -284,6 +285,30 @@ Para conferir visual e responsividade sem a API: `npm run dev:web` e abra
   Erros do back por exercício (`body.exercicios.2.series`) vão para o campo certo; aluno inativo e
   treino com exercício excluído mostram a mensagem do back no aviso.
 - Se a lista, o treino ou a biblioteca não carregarem, aparece o `ErrorState` com mensagem amigável
+  (ou a do back, quando é para o usuário) e "Tentar novamente". Se as cores não carregarem, vale o aviso
+  geral do painel (ThemeNotice) e as telas seguem legíveis nas cores do sistema.
+
+## Nutrição (FE-NUT-01)
+
+| Rota                            | Tela                                                    |
+| ------------------------------- | ------------------------------------------------------- |
+| `/alunos/:id?aba=nutricao`      | Plano em uso (editar, novo plano, encerrar) e histórico |
+| `/alunos/:id/nutricao/novo`     | Criar plano nutricional                                 |
+| `/alunos/:id/nutricao/:planoId` | Editar o plano em uso (mesmo formulário)                |
+
+- Chamadas à API só em `features/nutricao/nutricao-api.ts` (BE-NUT-01).
+- **Regras do back:** o aluno tem no máximo um plano em uso. Criar um plano novo manda o atual para o
+  histórico (a tela avisa antes de salvar); encerrar deixa o aluno sem plano (pede confirmação). Nada é apagado.
+- **Formulário:** nome, observações (opcional) e refeições na ordem do dia (↑ ↓ para mudar a ordem), cada uma
+  com nome, horário (opcional) e alimentos e quantidades. Salvar a edição envia a lista inteira (o back substitui).
+- **Sem plano em uso:** o back responde 404 `PLANO_NUTRICIONAL_NAO_DEFINIDO`; a tela mostra o estado vazio com
+  "Criar plano" (não é erro).
+- **Histórico:** planos substituídos ou encerrados, do mais recente ao mais antigo; cada um abre para leitura.
+- Validação em `plano-validacao.ts`, com as **mesmas regras do back**
+  (`apps/api/src/modules/nutricao/nutricao.schemas.ts`). Mudou lá? Ajuste aqui.
+  Erros do back por refeição (`body.refeicoes.2.descricao`) vão para o campo certo; aluno inativo e plano que
+  já não está em uso mostram a mensagem do back no aviso.
+- Se o plano, o histórico ou o formulário não carregarem, aparece o `ErrorState` com mensagem amigável
   (ou a do back, quando é para o usuário) e "Tentar novamente". Se as cores não carregarem, vale o aviso
   geral do painel (ThemeNotice) e as telas seguem legíveis nas cores do sistema.
 

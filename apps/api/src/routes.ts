@@ -12,6 +12,7 @@ import { InMemoryExerciciosRepository } from './modules/exercicios/exercicios.me
 import { createExerciciosRouter } from './modules/exercicios/exercicios.routes';
 import { InMemoryFeedbacksRepository } from './modules/feedbacks/feedbacks.memory-repository';
 import { createFeedbacksRouter } from './modules/feedbacks/feedbacks.routes';
+import { FeedbacksService } from './modules/feedbacks/feedbacks.service';
 import { InMemoryFotosRepository } from './modules/fotos/fotos.memory-repository';
 import { createFotosRouter } from './modules/fotos/fotos.routes';
 import { InMemoryMedidasRepository } from './modules/medidas/medidas.memory-repository';
@@ -81,7 +82,9 @@ export function createRouter(env: Env): Router {
     }),
   );
   router.use(createQuestionariosRouter(questionarios, alunos));
-  router.use(createRespostasRouter(respostas, questionarios, alunos));
+  // Enviar as respostas de um feedback muda o status dele (BE-FBK-04).
+  const feedbacksService = new FeedbacksService(feedbacks, questionarios, alunos);
+  router.use(createRespostasRouter(respostas, questionarios, alunos, feedbacksService));
   router.use(createFeedbacksRouter(feedbacks, questionarios, alunos));
   router.use(
     createFotosRouter(fotos, alunos, storage, {

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { router } from 'expo-router';
 import { Text, View } from 'react-native';
 
 import { signOut } from '../auth/auth';
@@ -17,7 +18,55 @@ export default function HomeScreen(): ReactElement {
         Seu acompanhamento começa aqui.
       </Text>
 
-      <View className="mt-xl">
+      <View className="mt-xl gap-sm">
+        <Button
+          label="Preencher anamnese"
+          onPress={() => {
+            router.push('/anamnese');
+          }}
+        />
+        <Button
+          label="Meus feedbacks"
+          onPress={() => {
+            router.push('/feedbacks');
+          }}
+        />
+        <Button
+          label="Enviar fotos"
+          onPress={() => {
+            router.push('/fotos/enviar');
+          }}
+        />
+        <Button
+          label="Minhas fotos"
+          onPress={() => {
+            router.push('/fotos');
+          }}
+        />
+        <Button
+          label="Registrar peso e medidas"
+          onPress={() => {
+            router.push('/evolucao/registrar');
+          }}
+        />
+        <Button
+          label="Minha evolução"
+          onPress={() => {
+            router.push('/evolucao');
+          }}
+        />
+        <Button
+          label="Meus treinos"
+          onPress={() => {
+            router.push('/treinos');
+          }}
+        />
+        <Button
+          label="Plano nutricional"
+          onPress={() => {
+            router.push('/nutricao');
+          }}
+        />
         <Button
           label="Sair"
           loading={leaving}
