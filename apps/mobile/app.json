@@ -21,6 +21,14 @@
         {
           "backgroundColor": "#081225"
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "O HealthFitAI usa a câmera para você tirar as fotos de evolução pedidas pelo seu treinador.",
+          "photosPermission": "O HealthFitAI acessa suas fotos para você escolher as fotos de evolução pedidas pelo seu treinador.",
+          "microphonePermission": false
+        }
       ]
     ]
   }

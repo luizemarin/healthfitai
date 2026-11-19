@@ -2078,7 +2078,7 @@ export interface paths {
         put?: never;
         /**
          * Enviar respostas
-         * @description BE-RSP-01 · Transforma o rascunho em registro final, datado e somente leitura. Responder de novo depois disso cria outra submissão (nada é sobrescrito). "respostas" (opcional) grava as últimas alterações antes de enviar. BE-RSP-03 · Em avaliação, "respondidoEm" (opcional) é a data em que o profissional avaliou; padrão: agora. Não pode estar no futuro. 400 RESPOSTAS_OBRIGATORIAS_PENDENTES (details lista as perguntas); 400 DATA_RESPOSTA_NAO_PERMITIDA (data fora de avaliação). 404 NOT_FOUND (aluno ou submissão); 409 ALUNO_INATIVO; 409 SUBMISSAO_FINALIZADA (já enviada, não muda mais).
+         * @description BE-RSP-01 · Transforma o rascunho em registro final, datado e somente leitura. Responder de novo depois disso cria outra submissão (nada é sobrescrito). "respostas" (opcional) grava as últimas alterações antes de enviar. BE-RSP-03 · Em avaliação, "respondidoEm" (opcional) é a data em que o profissional avaliou; padrão: agora. Não pode estar no futuro. 400 RESPOSTAS_OBRIGATORIAS_PENDENTES (details lista as perguntas); 400 DATA_RESPOSTA_NAO_PERMITIDA (data fora de avaliação). BE-FBK-04 · Em feedback, "feedbackId" (opcional) é o feedback respondido: é conferido antes de enviar e passa a "respondido" com esta submissão. 400 VALIDATION_ERROR (feedbackId fora de feedback ou de outro modelo); 404 NOT_FOUND (feedback); 409 FEEDBACK_JA_RESPONDIDO; 409 FEEDBACK_NAO_LIBERADO. 404 NOT_FOUND (aluno ou submissão); 409 ALUNO_INATIVO; 409 SUBMISSAO_FINALIZADA (já enviada, não muda mais).
          */
         post: {
             parameters: {
@@ -6774,6 +6774,11 @@ export interface components {
              * @example 2026-11-04T09:30:00-03:00
              */
             respondidoEm?: string;
+            /**
+             * Format: uuid
+             * @description Só em questionário do tipo feedback: o feedback que estas respostas respondem (BE-FBK-04 · passa a "respondido").
+             */
+            feedbackId?: string;
         };
         SubmissaoResumo: {
             /** Format: uuid */

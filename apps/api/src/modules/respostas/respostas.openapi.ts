@@ -85,7 +85,11 @@ export function registerRespostasOpenApi(registry: OpenAPIRegistry): void {
       'BE-RSP-03 · Em avaliação, "respondidoEm" (opcional) é a data em que o profissional ' +
       'avaliou; padrão: agora. Não pode estar no futuro. ' +
       '400 RESPOSTAS_OBRIGATORIAS_PENDENTES (details lista as perguntas); ' +
-      `400 DATA_RESPOSTA_NAO_PERMITIDA (data fora de avaliação). ${ERROS_ESCRITA}`,
+      '400 DATA_RESPOSTA_NAO_PERMITIDA (data fora de avaliação). ' +
+      'BE-FBK-04 · Em feedback, "feedbackId" (opcional) é o feedback respondido: ' +
+      'é conferido antes de enviar e passa a "respondido" com esta submissão. ' +
+      '400 VALIDATION_ERROR (feedbackId fora de feedback ou de outro modelo); ' +
+      `404 NOT_FOUND (feedback); 409 FEEDBACK_JA_RESPONDIDO; 409 FEEDBACK_NAO_LIBERADO. ${ERROS_ESCRITA}`,
     request: {
       headers: profissionalHeaderSchema,
       params: submissaoParamsSchema,

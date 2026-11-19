@@ -16,6 +16,7 @@ import { ExerciciosListaPage } from '../features/exercicios/exercicios-lista-pag
 import { FeedbackAgendarPage } from '../features/feedbacks/feedback-agendar-page';
 import { FeedbackDetalhePage } from '../features/feedbacks/feedback-detalhe-page';
 import { PosesPage } from '../features/fotos/poses-page';
+import { PlanoEditarPage, PlanoNovoPage } from '../features/nutricao/plano-form-page';
 import { ModeloEditarPage, ModeloNovoPage } from '../features/questionarios/modelo-form-page';
 import { ModelosListaPage } from '../features/questionarios/modelos-lista-page';
 import { TreinoEditarPage, TreinoNovoPage } from '../features/treinos/treino-form-page';
@@ -52,6 +53,9 @@ export const router = createBrowserRouter([
       // Treinos: FE-TRE-01 montar/editar (a lista, com duplicar, fica na aba da ficha)
       { path: 'alunos/:id/treinos/novo', element: <TreinoNovoPage /> },
       { path: 'alunos/:id/treinos/:treinoId', element: <TreinoEditarPage /> },
+      // Nutrição: FE-NUT-01 criar/editar plano (o plano em uso e o histórico ficam na aba da ficha)
+      { path: 'alunos/:id/nutricao/novo', element: <PlanoNovoPage /> },
+      { path: 'alunos/:id/nutricao/:planoId', element: <PlanoEditarPage /> },
       // Fotos: FE-FOT-01 poses (a galeria FE-FOT-02 e o comparador FE-FOT-03 ficam na aba da ficha)
       { path: 'fotos/poses', element: <PosesPage /> },
       // Questionários: FE-QST-01 gestão de modelos · FE-QST-02 construtor de perguntas

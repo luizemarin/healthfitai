@@ -12,6 +12,7 @@ import { AsyncContent, EmptyState, useAsync } from '../../components/states';
 import { AvaliacoesHistorico } from '../avaliacoes/avaliacoes-historico';
 import { FeedbacksPainel } from '../feedbacks/feedbacks-painel';
 import { FotosPainel } from '../fotos/fotos-painel';
+import { NutricaoPainel } from '../nutricao/nutricao-painel';
 import { AnamneseRespondida } from '../questionarios/anamnese-respondida';
 import { TreinosPainel } from '../treinos/treinos-painel';
 
@@ -23,6 +24,7 @@ import type { PerfilAluno } from './alunos-api';
  * Abas da ficha. O conteúdo de cada uma chega com o requisito dela:
  *   anamnese → FE-QST-03 · avaliacoes → FE-AVA-01/02 · feedbacks → FE-FBK-01/02/03
  *   fotos → FE-FOT-02/03 · medidas → FE-EVO-02 · evolucao → FE-EVO-01 · treinos → FE-TRE-01
+ *   nutricao → FE-NUT-01
  */
 const ABAS = [
   {
@@ -40,6 +42,7 @@ const ABAS = [
   },
   { id: 'evolucao', label: 'Evolução', vazio: 'Os gráficos de evolução aparecem aqui.' },
   { id: 'treinos', label: 'Treinos', vazio: 'Os treinos do aluno aparecem aqui.' },
+  { id: 'nutricao', label: 'Nutrição', vazio: 'O plano nutricional do aluno aparece aqui.' },
 ] as const;
 
 type AbaId = (typeof ABAS)[number]['id'];
@@ -225,5 +228,6 @@ function ConteudoDaAba({
   if (aba.id === 'feedbacks') return <FeedbacksPainel alunoId={alunoId} />;
   if (aba.id === 'fotos') return <FotosPainel alunoId={alunoId} />;
   if (aba.id === 'treinos') return <TreinosPainel alunoId={alunoId} />;
+  if (aba.id === 'nutricao') return <NutricaoPainel alunoId={alunoId} />;
   return <EmptyState title={`${aba.label}: nada por aqui ainda`} description={aba.vazio} />;
 }

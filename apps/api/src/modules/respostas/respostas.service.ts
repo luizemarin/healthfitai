@@ -63,11 +63,36 @@ const Erros = {
       'DATA_RESPOSTA_NAO_PERMITIDA',
       'A data da resposta só pode ser informada em avaliações preenchidas pelo profissional.',
     ),
+  feedbackForaDeFeedback: () =>
+    AppError.validation(
+      [
+        {
+          field: 'body.feedbackId',
+          message: 'Só questionários do tipo feedback podem responder a um feedback.',
+        },
+      ],
+      'Só questionários do tipo feedback podem responder a um feedback.',
+    ),
   dataNoFuturo: () =>
     AppError.validation([
       { field: 'body.respondidoEm', message: 'A data da avaliação não pode estar no futuro.' },
     ]),
 };
+
+/**
+ * BE-FBK-04 · O que as respostas usam do módulo de feedbacks (implementado pelo
+ * FeedbacksService). A mudança de status vem da resposta do aluno, não de rota.
+ */
+export interface RespostaDeFeedback {
+  /** Confere, antes de enviar, se o aluno pode responder este feedback com este modelo. */
+  conferirResposta: (alunoId: string, feedbackId: string, modeloId: string) => Promise<void>;
+  /** Depois de enviar: enviado/atrasado → respondido, ligado à submissão. */
+  marcarRespondido: (
+    feedbackId: string,
+    submissaoId: string,
+    respondidoEm: Date,
+  ) => Promise<unknown>;
+}
 
 /** Folga para diferença de relógio entre o aparelho e o servidor. */
 const TOLERANCIA_FUTURO_MS = 5 * 60 * 1000;
@@ -169,9 +194,7 @@ function definirDataResposta(submissao: Submissao, informada: string | undefined
 }
 
 /** Converte a corrida "outro aparelho enviou antes" e o "sumiu" em erros claros. */
-async function tratarFinalizada(
-  operacao: () => Promise<Submissao | null>,
-): Promise<Submissao> {
+async function tratarFinalizada(operacao: () => Promise<Submissao | null>): Promise<Submissao> {
   let resultado: Submissao | null;
   try {
     resultado = await operacao();
@@ -202,14 +225,18 @@ export class RespostasService {
 
   private readonly alunos: AlunosRepository;
 
+  private readonly feedbacks: RespostaDeFeedback;
+
   constructor(
     repository: RespostasRepository,
     questionarios: QuestionariosRepository,
     alunos: AlunosRepository,
+    feedbacks: RespostaDeFeedback,
   ) {
     this.repository = repository;
     this.questionarios = questionarios;
     this.alunos = alunos;
+    this.feedbacks = feedbacks;
   }
 
   /**
@@ -271,6 +298,8 @@ export class RespostasService {
    * BE-RSP-01 · Envia: confere as obrigatórias e transforma o rascunho em
    * registro final, datado e somente leitura.
    * BE-RSP-03 · Em avaliação, o profissional pode informar a data em que avaliou.
+   * BE-FBK-04 · Em feedback, `feedbackId` diz qual feedback foi respondido: ele é
+   * conferido antes e passa a "respondido" depois de enviar.
    */
   async finalizar(
     profissionalId: string,
@@ -282,6 +311,13 @@ export class RespostasService {
     let submissao = await this.buscarRascunho(alunoId, id);
 
     const respondidoEm = definirDataResposta(submissao, dados?.respondidoEm);
+    const feedbackId = dados?.feedbackId;
+    if (feedbackId) {
+      if (submissao.tipo !== 'feedback') {
+        throw Erros.feedbackForaDeFeedback();
+      }
+      await this.feedbacks.conferirResposta(alunoId, feedbackId, submissao.modeloId);
+    }
     const perguntas = await this.perguntasDaVersao(submissao);
 
     // Últimas alterações enviadas junto com o "enviar" (ficam salvas no rascunho
@@ -298,6 +334,9 @@ export class RespostasService {
     const finalizada = await tratarFinalizada(async () =>
       this.repository.finalizar(submissao.id, respondidoEm),
     );
+    if (feedbackId) {
+      await this.registrarResposta(feedbackId, finalizada.id, respondidoEm);
+    }
     return this.detalhar(finalizada, await this.modeloDa(profissionalId, finalizada), perguntas);
   }
 
@@ -347,6 +386,25 @@ export class RespostasService {
   }
 
   // ─── Apoio ────────────────────────────────────────────────────────────────
+
+  /**
+   * As respostas já estão salvas: se o feedback mudou no meio do caminho (ex.: o
+   * aluno respondeu em outro aparelho), não desfaz o envio. Só registra no log.
+   */
+  private async registrarResposta(
+    feedbackId: string,
+    submissaoId: string,
+    respondidoEm: Date,
+  ): Promise<void> {
+    try {
+      await this.feedbacks.marcarRespondido(feedbackId, submissaoId, respondidoEm);
+    } catch (error) {
+      const detalhe = error instanceof Error ? error.message : String(error);
+      process.stderr.write(
+        `[respostas] feedback ${feedbackId} não passou a respondido (submissão ${submissaoId}): ${detalhe}\n`,
+      );
+    }
+  }
 
   private async buscarAluno(profissionalId: string, alunoId: string): Promise<Aluno> {
     const aluno = await this.alunos.findById(profissionalId, alunoId);

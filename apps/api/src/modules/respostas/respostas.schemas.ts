@@ -127,7 +127,8 @@ export const salvarRascunhoBodySchema = z
 /**
  * BE-RSP-01/03 · Envia a submissão (vira registro final e não muda mais).
  * Corpo opcional: `respostas` grava as últimas alterações antes de enviar;
- * `respondidoEm` só em avaliação (data em que o profissional fez a avaliação).
+ * `respondidoEm` só em avaliação (data em que o profissional fez a avaliação);
+ * `feedbackId` só em feedback (o feedback que a resposta responde, BE-FBK-04).
  */
 export const finalizarSubmissaoBodySchema = z
   .strictObject(
@@ -136,6 +137,14 @@ export const finalizarSubmissaoBodySchema = z
       respondidoEm: dataHora('respondidoEm')
         .optional()
         .meta({ description: 'Só em avaliação (BE-RSP-03). Padrão: agora.' }),
+      feedbackId: z
+        .uuid({ error: 'O "feedbackId" deve ser um UUID válido.' })
+        .optional()
+        .meta({
+          description:
+            'Só em questionário do tipo feedback: o feedback que estas respostas respondem ' +
+            '(BE-FBK-04 · passa a "respondido").',
+        }),
     },
     { error: erroCorpo },
   )
